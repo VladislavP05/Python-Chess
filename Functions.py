@@ -3,7 +3,6 @@ import Data
 
 
 
-
 def getTextureAddress(value):
 
     pieceColor = Data.Piece.White if value < 16 else Data.Piece.Black
@@ -18,10 +17,8 @@ def isSlidingPiece(piece):
     if 11 < piece < 15 or 19 < piece < 23:
 
         return True
-
-    else:
         
-        return False
+    return False
     
 
 
@@ -56,6 +53,15 @@ def isFriendly(piece, targetPiece):
     else:
 
         return False
+
+
+def isOurTurn(piece):
+
+    if (piece < 16 and Data.isWhiteTurn) or (piece > 16 and not Data.isWhiteTurn):
+
+        return True
+
+    return False
 
 
 
@@ -140,19 +146,25 @@ def drawBoard(xCord, yCord, Screen):
 
     for rank in range(7, -1, -1):
         for file in range(8):
+
             square = pygame.Surface((100,100))
+
             squareColor = pygame.Rect(0,0,100,100)
 
+            if Data.originalSquareIndex != -1:
 
-            if Data.originalSquareIndex in Data.moves and squareIndex in Data.moves[Data.originalSquareIndex]:
-
+                print(f'{(Data.originalSquareIndex in Data.moves)} 1')
+                print(f'{(squareIndex in Data.moves[Data.originalSquareIndex])} 2')
+                print(f'{isOurTurn(Data.boardArray[Data.originalSquareIndex])} 3')
+            if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.boardArray[Data.originalSquareIndex]):
                 pygame.draw.rect(square,(200, 50, 50), squareColor)
 
-
             elif (file + rank) % 2 == 0:
+
                 pygame.draw.rect(square,(255, 230, 179), squareColor)
 
             else:
+
                 pygame.draw.rect(square,(160, 100, 57), squareColor)
 
             if Data.boardArray[squareIndex] > 0:
@@ -175,7 +187,7 @@ def generateMoves():
 
         piece = Data.boardArray[startSquare]
 
-        if (0 < piece < 16 and Data.isWhiteTurn == True) or (16 < piece < 23 and Data.isWhiteTurn == False):
+        if piece != 0: #(0 < piece < 16 and Data.isWhiteTurn == True) or (16 < piece < 23 and Data.isWhiteTurn == False):
 
             if isSlidingPiece(piece):
 
@@ -262,15 +274,13 @@ def generatePawnMoves(startsquare,piece):
 
 
 
-
-
 def generateKingMoves(startsquare, piece):
 
     for direction in range(8):
 
         numSquares = Data.MoveData.numSquaresToEdge[startsquare][direction]
 
-        if numSquares > 1:
+        if numSquares > 0:
 
             targetSquare = startsquare + Data.directionalOffsets[direction]
             pieceOnTargetSquare = Data.boardArray[targetSquare]
@@ -360,4 +370,3 @@ def generateSlidingMoves(startsquare, piece):
             if not isFriendly(piece, pieceOnTargetSquare) and pieceOnTargetSquare != 0:
 
                 break
-
