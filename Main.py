@@ -44,7 +44,7 @@ while True:
 
                 Data.originalSquareIndex = rank * 8 + file
 
-                #--Rework--
+                #-- Needs Rework--
 
                 if 0 < Data.boardArray[Data.originalSquareIndex] < 16 and Data.isWhiteTurn:
 
@@ -136,8 +136,6 @@ while True:
         Functions.generateMoves()
 
         Data.originalSquareIndex = -1
-
-        print(Data.moves)
 
         pieceMoved = False
 

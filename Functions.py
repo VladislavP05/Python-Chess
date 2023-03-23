@@ -151,12 +151,7 @@ def drawBoard(xCord, yCord, Screen):
 
             squareColor = pygame.Rect(0,0,100,100)
 
-            if Data.originalSquareIndex != -1:
-
-                print(f'{(Data.originalSquareIndex in Data.moves)} 1')
-                print(f'{(squareIndex in Data.moves[Data.originalSquareIndex])} 2')
-                print(f'{isOurTurn(Data.boardArray[Data.originalSquareIndex])} 3')
-            if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.boardArray[Data.originalSquareIndex]):
+            if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.originalSquareValue):
                 pygame.draw.rect(square,(200, 50, 50), squareColor)
 
             elif (file + rank) % 2 == 0:
