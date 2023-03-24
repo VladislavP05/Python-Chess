@@ -30,13 +30,13 @@ def isKnight(piece):
     
     return False
 
-def isKing(piece):
+# def isKing(piece):
 
-    if piece == 9 or piece == 17:
+#     if piece == 9 or piece == 17:
 
-        return True
+#         return True
     
-    return False
+#     return False
 
 
 
@@ -50,9 +50,7 @@ def isFriendly(piece, targetPiece):
 
         return True
 
-    else:
-
-        return False
+    return False
 
 
 def isOurTurn(piece):
@@ -182,7 +180,7 @@ def generateMoves():
 
         piece = Data.boardArray[startSquare]
 
-        if piece != 0: #(0 < piece < 16 and Data.isWhiteTurn == True) or (16 < piece < 23 and Data.isWhiteTurn == False):
+        if piece != 0:
 
             if isSlidingPiece(piece):
 
@@ -191,15 +189,23 @@ def generateMoves():
             elif isKnight(piece):
 
                 generateKnightMoves(startSquare,piece)
-            
-            elif isKing(piece):
-
-                generateKingMoves(startSquare,piece)
 
             else:
 
                 generatePawnMoves(startSquare,piece)
-            
+
+
+def generateKingMovesAndChecks():
+
+    for startSquare in range(64):
+
+        if Data.boardArray[startSquare] == 9 or Data.boardArray[startSquare] == 17:
+
+            generateKingMoves(startSquare, Data.boardArray[startSquare])
+
+
+
+
 
 
 def generatePawnMoves(startsquare,piece):
@@ -279,6 +285,12 @@ def generateKingMoves(startsquare, piece):
 
             targetSquare = startsquare + Data.directionalOffsets[direction]
             pieceOnTargetSquare = Data.boardArray[targetSquare]
+
+            for move in Data.moves:
+
+                if not isFriendly(piece, Data.boardArray[move]) and targetSquare in Data.moves[move]:
+
+                    pass
 
             if isFriendly(piece, pieceOnTargetSquare):
 
