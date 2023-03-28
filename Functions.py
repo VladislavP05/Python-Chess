@@ -30,13 +30,13 @@ def isKnight(piece):
     
     return False
 
-# def isKing(piece):
+def isKing(piece):
 
-#     if piece == 9 or piece == 17:
+    if piece == 9 or piece == 17:
 
-#         return True
+        return True
     
-#     return False
+    return False
 
 
 
@@ -195,16 +195,10 @@ def generateMoves():
                 generatePawnMoves(startSquare,piece)
 
 
-def generateKingMovesAndChecks():
 
-    for startSquare in range(64):
+def generateChecks():
 
-        if Data.boardArray[startSquare] == 9 or Data.boardArray[startSquare] == 17:
-
-            generateKingMoves(startSquare, Data.boardArray[startSquare])
-
-
-
+    pass
 
 
 
@@ -275,34 +269,50 @@ def generatePawnMoves(startsquare,piece):
 
 
 
-def generateKingMoves(startsquare, piece):
+def generateKingMoves():
 
-    for direction in range(8):
+    for square in range(64):
 
-        numSquares = Data.MoveData.numSquaresToEdge[startsquare][direction]
+        if isKing(Data.boardArray[square]):
 
-        if numSquares > 0:
+            for direction in range(8):
 
-            targetSquare = startsquare + Data.directionalOffsets[direction]
-            pieceOnTargetSquare = Data.boardArray[targetSquare]
+                numSquares = Data.MoveData.numSquaresToEdge[square][direction]
 
-            for move in Data.moves:
+                if numSquares > 0:
 
-                if not isFriendly(piece, Data.boardArray[move]) and targetSquare in Data.moves[move]:
+                    targetSquare = square + Data.directionalOffsets[direction]
+                    pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-                    pass
+                    # for move in Data.moves:
 
-            if isFriendly(piece, pieceOnTargetSquare):
+                    #     if not isFriendly(piece, Data.boardArray[move]) and targetSquare in Data.moves[move]:
 
-                continue
+                    #         continue
 
-            if startsquare not in Data.moves:
+                    if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
 
-                Data.moves[startsquare] = [targetSquare]
+                        continue
 
-            else:
+                    if square not in Data.moves:
 
-                Data.moves[startsquare].append(targetSquare)
+                        Data.moves[square] = [targetSquare]
+
+                    else:
+
+                        Data.moves[square].append(targetSquare)
+
+            if square in Data.moves:
+
+                for piecesquare in Data.moves:
+
+                    for move in Data.moves[square]:
+
+                        if not isFriendly(Data.boardArray[square], Data.boardArray[piecesquare]) and move in Data.moves[piecesquare]:
+
+                            Data.moves[square].remove(move)
+
+        print(Data.moves)
 
 
 
