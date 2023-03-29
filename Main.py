@@ -39,7 +39,7 @@ while True:
             if (50 < mouseX < 850) and (100 < mouseY < 900) and mouseDraging == False:
 
                 rank = (((mouseY - 100) // 100) - 7) * -1
-                
+
                 file = (mouseX - 50) // 100
 
                 Data.originalSquareIndex = rank * 8 + file
@@ -133,13 +133,17 @@ while True:
 
         Data.moves = {}
 
+        Data.pinnedSquares = []
+
         Functions.generateMoves()
 
         Functions.generateKingMoves()
 
         Data.originalSquareIndex = -1
 
-        print(Data.moves)
+        print(f"{Data.pinnedSquares} - Pinned Squares")
+
+        print(f"{Data.moves} - Square Moves")
 
         pieceMoved = False
 

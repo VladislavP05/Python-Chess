@@ -93,7 +93,4 @@ class MoveData():
 
 moves = {}
 
-
-
-
-
+pinnedSquares = []
