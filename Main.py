@@ -7,9 +7,7 @@ pygame.init()
 
 testClock = pygame.time.Clock()
 
-
 pygame.display.set_caption('Chess by Vladislav Petkov')
-
 
 screen = pygame.display.set_mode((1400,1000))
 
@@ -44,13 +42,13 @@ while True:
 
                 Data.originalSquareIndex = rank * 8 + file
 
-                #--Rework--
+                Data.originalSquareValue = Data.boardArray[Data.originalSquareIndex]
+
+                #--Needs Rework--
 
                 if 0 < Data.boardArray[Data.originalSquareIndex] < 16 and Data.isWhiteTurn:
 
                     mouseDraging = True
-
-                    Data.originalSquareValue = Data.boardArray[Data.originalSquareIndex]
 
                     currentPieceAddress = Functions.getTextureAddress(Data.boardArray[Data.originalSquareIndex])                
 
@@ -59,8 +57,6 @@ while True:
                 elif Data.boardArray[Data.originalSquareIndex] > 16 and not Data.isWhiteTurn:
 
                     mouseDraging = True
-
-                    Data.originalSquareValue = Data.boardArray[Data.originalSquareIndex]
 
                     currentPieceAddress = Functions.getTextureAddress(Data.boardArray[Data.originalSquareIndex])                
 
@@ -145,10 +141,12 @@ while True:
 
         print(f"{Data.moves} - Square Moves")
 
+        print(Data.codeFen)
+
         pieceMoved = False
 
     pygame.display.flip()
 
     screen.fill((25,25,25))
 
-# Test Version 1.3
+# Test Version 1.4

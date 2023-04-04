@@ -1,7 +1,7 @@
 
 boardArray = [0 for i in range(64)]
 
-codeFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen =  'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' #'rnbq1bnr/2ppkppp/2R5/pp2p3/P3P3/4K3/1PPP1PPP/1NBQ1BNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
@@ -10,6 +10,7 @@ isWhiteTurn = True
 #----Mouse Objects----
 
 originalSquareValue = -1
+
 originalSquareIndex = -1
 
 

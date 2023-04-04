@@ -144,6 +144,7 @@ def updateFenFromPosition(array):
 
 
 def drawBoard(xCord, yCord, Screen):
+
     board = pygame.Surface((800,800))
 
     squareIndex = 0
@@ -156,6 +157,7 @@ def drawBoard(xCord, yCord, Screen):
             squareColor = pygame.Rect(0,0,100,100)
 
             if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.originalSquareValue):
+
                 pygame.draw.rect(square,(200, 50, 50), squareColor)
 
             elif (file + rank) % 2 == 0:
@@ -267,7 +269,7 @@ def generatePawnMoves(startsquare,piece):
             targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + i
             pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-            if isFriendly(piece, pieceOnTargetSquare) or (i == 0 and pieceOnTargetSquare != 0) or numSquares == 0: #isFriendly(piece,pieceOnTargetSquare) or (pieceOnTargetSquare != 0 and i == 0) or (i != 0 and pieceOnTargetSquare == 0) or (pieceOnTargetSquare == 0 and i != 0) and numSquares == 0:
+            if isFriendly(piece, pieceOnTargetSquare) or (i == 0 and pieceOnTargetSquare != 0) or numSquares == 0:
 
                 continue
 
@@ -302,35 +304,46 @@ def generateKingMoves():
                     targetSquare = square + Data.directionalOffsets[direction]
                     pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-                    # for move in Data.moves:
+                    if isOurTurn(Data.boardArray[square]):
 
-                    #     if not isFriendly(piece, Data.boardArray[move]) and targetSquare in Data.moves[move]:
+                        if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
 
-                    #         continue
+                            continue
 
-                    if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
+                        if square not in Data.moves:
 
-                        continue
+                            Data.moves[square] = [targetSquare]
 
-                    if square not in Data.moves:
+                        else:
 
-                        Data.moves[square] = [targetSquare]
+                            Data.moves[square].append(targetSquare)
 
                     else:
 
-                        Data.moves[square].append(targetSquare)
+                        Data.pinnedSquares.append(targetSquare)
 
             if square in Data.moves:
 
-                for piecesquare in Data.moves:
+                for move in Data.moves[square]:
+                    
+                    for piecesquare in Data.moves:
 
-                    for move in Data.moves[square]:
 
-                        if (not isFriendly(Data.boardArray[square], Data.boardArray[piecesquare]) and move in Data.moves[piecesquare]) or move in Data.pinnedSquares:
+                        print(f'{not isFriendly(Data.boardArray[square], Data.boardArray[piecesquare])} 1')
+
+                        print(f'{move in Data.moves[piecesquare]} 2')
+
+                        print(f'{move in Data.pinnedSquares} 3')
+
+                        print(f'{piecesquare} Square')
+
+                        print(f'{move} Move')
+
+                        if (not isFriendly(Data.boardArray[square], Data.boardArray[piecesquare]) and (move in Data.moves[piecesquare] or move in Data.pinnedSquares)):
 
                             Data.moves[square].remove(move)
 
-        # print(Data.moves)
+                            print(f'Removed square - {move}')
 
 
 
@@ -391,6 +404,16 @@ def generateSlidingMoves(startsquare, piece):
             pieceOnTargetSquare = Data.boardArray[targetSquare]
 
             if isFriendly(piece, pieceOnTargetSquare):
+
+                break
+
+            if (isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare)) and not isOurTurn(piece):
+
+                for remainingSquares in range(n, numSquares):
+
+                    targetSquare = startsquare + Data.directionalOffsets[direction] * (remainingSquares + 1)
+
+                    Data.pinnedSquares.append(targetSquare)
 
                 break
 
