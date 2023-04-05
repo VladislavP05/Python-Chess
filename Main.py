@@ -19,6 +19,14 @@ pieceMoved = False
 Functions.updatePositionFromFen(Data.codeFen)
 Functions.generateMoves()
 
+
+
+
+#Continue working on the pinned squares
+
+
+
+
 while True:
     
     testClock.tick(120)
@@ -26,8 +34,11 @@ while True:
     Functions.drawBoard(50,100, screen)
 
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
+
             pygame.quit()
+
             sys.exit()
     
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -136,12 +147,6 @@ while True:
         Functions.generateKingMoves()
 
         Data.originalSquareIndex = -1
-
-        print(f"{Data.pinnedSquares} - Pinned Squares")
-
-        print(f"{Data.moves} - Square Moves")
-
-        print(Data.codeFen)
 
         pieceMoved = False
 
