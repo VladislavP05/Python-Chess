@@ -204,7 +204,7 @@ def generateMoves():
 
 
 
-def generateChecks():
+def checkForChecks():
 
     pass
 
@@ -277,11 +277,11 @@ def generatePawnMoves(startsquare,piece):
 
                 continue
 
-            if i != 0 and pieceOnTargetSquare == 0 and not isOurTurn(piece):
+            if i != 0 and (pieceOnTargetSquare == 0 or isFriendly(piece, pieceOnTargetSquare)) and not isOurTurn(piece):
 
                 Data.pinnedSquares.append(targetSquare)
 
-            elif i != 0 and pieceOnTargetSquare != 0 or i == 0 and pieceOnTargetSquare == 0:
+            elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 and pieceOnTargetSquare == 0:
 
                 if startsquare not in Data.moves:
 
@@ -295,7 +295,13 @@ def generatePawnMoves(startsquare,piece):
 
 def generateKingMoves():
 
-    for square in range(64):
+    startSquare = 63 if Data.isWhiteTurn else 0
+
+    endSquare = 0 if Data.isWhiteTurn else 64
+
+    increment = -1 if Data.isWhiteTurn else 1
+
+    for square in range(startSquare, endSquare, increment):
 
         if isKing(Data.boardArray[square]):
 
@@ -308,11 +314,17 @@ def generateKingMoves():
                     targetSquare = square + Data.directionalOffsets[direction]
                     pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-                    if isOurTurn(Data.boardArray[square]):
+                    if not isOurTurn(Data.boardArray[square]):
 
-                        if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
+                        if isFriendly(Data.boardArray[square], pieceOnTargetSquare) or pieceOnTargetSquare == 0:
 
                             Data.pinnedSquares.append(targetSquare)
+                        
+                        continue
+
+                    else:
+
+                        if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
 
                             continue
 
@@ -324,9 +336,39 @@ def generateKingMoves():
 
                             Data.moves[square].append(targetSquare)
 
-                    else:
+            if square in Data.moves:
 
-                        Data.pinnedSquares.append(targetSquare)
+                toBeRemoved = []
+
+                for move in Data.moves[square]:
+
+                    if move in Data.pinnedSquares:
+
+                        toBeRemoved.append(move)
+
+                for i in toBeRemoved:
+
+                    Data.moves[square].remove(i)
+
+                    # if isOurTurn(Data.boardArray[square]):
+
+                    #     if isFriendly(Data.boardArray[square], pieceOnTargetSquare):
+
+                    #         Data.pinnedSquares.append(targetSquare)
+
+                    #         continue
+
+                    #     if square not in Data.moves:
+
+                    #         Data.moves[square] = [targetSquare]
+
+                    #     else:
+
+                    #         Data.moves[square].append(targetSquare)
+
+                    # else:
+
+                    #     Data.pinnedSquares.append(targetSquare)
 
             # if square in Data.moves:
 
@@ -343,21 +385,6 @@ def generateKingMoves():
             #     for i in toBeRemoved:
 
             #         Data.moves[square].remove(i)
-
-                if square in Data.moves:
-
-                    toBeRemoved = []
-
-                    for move in Data.moves[square]:
-
-                        if move in Data.pinnedSquares:
-
-                            toBeRemoved.append(move)
-
-                    for i in toBeRemoved:
-
-                        Data.moves[square].remove(i)
-
 
 
 

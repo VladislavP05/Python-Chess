@@ -20,11 +20,7 @@ Functions.updatePositionFromFen(Data.codeFen)
 Functions.generateMoves()
 
 
-
-
-#Continue working on the pinned squares
-
-
+#Fix sliding piece pinned squares
 
 
 while True:
