@@ -7,6 +7,12 @@ directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
 isWhiteTurn = True
 
+kingWhiteState = 0
+
+kingBlackState = 0
+
+gameState = 0
+
 #----Mouse Objects----
 
 originalSquareValue = -1

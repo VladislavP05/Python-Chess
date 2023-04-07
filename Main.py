@@ -142,6 +142,10 @@ while True:
 
         Functions.generateKingMoves()
 
+        Functions.checkForChecks()
+
+        print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
+
         Data.originalSquareIndex = -1
 
         pieceMoved = False
