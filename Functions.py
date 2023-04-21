@@ -206,19 +206,43 @@ def generateMoves():
 
 def checkForChecks():
 
-    for square in range(64):
+    for square, piece in enumerate(Data.boardArray):
          
-        if isKing(Data.boardArray[square]) and not isOurTurn(Data.boardArray[square]):
+        if isKing(piece) and isOurTurn(piece):
 
             if square in Data.pinnedSquares and square in Data.moves:
 
-                if Data.boardArray[square] == 9:
+                if piece == 9:
 
                     Data.kingWhiteState = 1
 
                 else:
 
                     Data.kingBlackState = 1
+
+                break
+            
+            elif square in Data.pinnedSquares and square not in Data.moves:
+
+                if piece == 9:
+
+                    Data.kingWhiteState = 2
+
+                else:
+
+                    Data.kingBlackState = 2
+
+                break
+
+            else:
+
+                if piece == 9:
+
+                    Data.kingWhiteState = 0
+
+                else:
+
+                    Data.kingBlackState = 0
 
 
 
@@ -362,6 +386,10 @@ def generateKingMoves():
 
                     Data.moves[square].remove(i)
 
+                if len(Data.moves[square]) == 0:
+
+                    Data.moves.pop(square)
+
 
 
 def generateKnightMoves(startsquare, piece):
@@ -390,13 +418,24 @@ def generateKnightMoves(startsquare, piece):
 
                     continue
 
+                else:
+
+                    for xDirection in range(2, 4):
+
+                        print(Data.MoveData.numSquaresToEdge[startsquare][xDirection])
+
+                        if Data.MoveData.numSquaresToEdge[startsquare][xDirection] == 0:
+
+                            continue
+
+
                 pieceOnTargetSquare = Data.boardArray[targetSquare]
 
                 if not isOurTurn(piece):
 
-                    if isFriendly(piece, pieceOnTargetSquare) or pieceOnTargetSquare == 0:
+                    # if isFriendly(piece, pieceOnTargetSquare) or pieceOnTargetSquare == 0:
 
-                        Data.pinnedSquares.append(targetSquare)
+                    Data.pinnedSquares.append(targetSquare)
 
                     continue
 

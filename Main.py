@@ -144,6 +144,8 @@ while True:
 
         Functions.checkForChecks()
 
+        print (Data.codeFen)
+
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
 
         Data.originalSquareIndex = -1
