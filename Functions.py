@@ -68,6 +68,39 @@ def isOurTurn(piece):
     return False
 
 
+def drawStatusBox(x, y, Screen, Font):
+
+    msgColor = (0)
+
+    msgBackground = (0)
+
+    msgText = ''
+
+    if Data.isWhiteTurn or Data.kingBlackState == 2:
+
+        msgColor = Data.WHITE
+
+    elif not Data.isWhiteTurn or Data.kingWhiteState == 2:
+
+        msgColor = Data.BLACK
+
+    if Data.kingBlackState == 2 or Data.kingWhiteState == 2:
+
+        msgText = 'White Side Wins' if Data.kingBlackState == 2 else 'Black Side Wins'
+
+    elif Data.isWhiteTurn:
+
+        msgText = "White Side's Turn"
+
+    elif not Data.isWhiteTurn:
+
+        msgText = "Black Side's Turn"
+
+    textBox = Font.render(msgText, True, msgColor)
+
+    Screen.blit(textBox, (x, y))
+
+
 
 def updateTurn():
 
@@ -150,6 +183,7 @@ def drawBoard(xCord, yCord, Screen):
     squareIndex = 0
 
     for rank in range(7, -1, -1):
+
         for file in range(8):
 
             square = pygame.Surface((100,100))
@@ -162,11 +196,11 @@ def drawBoard(xCord, yCord, Screen):
 
             elif (file + rank) % 2 == 0:
 
-                pygame.draw.rect(square,(255, 230, 179), squareColor)
+                pygame.draw.rect(square, Data.BOARDCOLBLACK, squareColor)
 
             else:
 
-                pygame.draw.rect(square,(160, 100, 57), squareColor)
+                pygame.draw.rect(square, Data.BOARDCOLWHITE , squareColor)
 
             if Data.boardArray[squareIndex] > 0:
             
@@ -260,32 +294,30 @@ def generatePawnMoves(startsquare,piece):
 
                 for j in range(-1, 2, 2):
 
-                    if Data.MoveData.numSquaresToEdge[startsquare + j][0]:
+                    targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + j
+                    pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-                        targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + j
-                        pieceOnTargetSquare = Data.boardArray[targetSquare]
+                    if isFriendly(piece,pieceOnTargetSquare):
 
-                        if isFriendly(piece,pieceOnTargetSquare):
-
-                            if not isOurTurn(piece):
-
-                                Data.pinnedSquares.append(targetSquare)
-
-                            continue
-
-                        if (pieceOnTargetSquare == 0 and j != 0) and not isOurTurn(piece):
+                        if not isOurTurn(piece):
 
                             Data.pinnedSquares.append(targetSquare)
 
-                        elif pieceOnTargetSquare != 0:
+                        continue
 
-                            if startsquare not in Data.moves:
+                    if (pieceOnTargetSquare == 0 and j != 0) and not isOurTurn(piece):
 
-                                Data.moves[startsquare] = [targetSquare]
+                        Data.pinnedSquares.append(targetSquare)
 
-                            else:
+                    elif pieceOnTargetSquare != 0:
 
-                                Data.moves[startsquare].append(targetSquare)
+                        if startsquare not in Data.moves:
+
+                            Data.moves[startsquare] = [targetSquare]
+
+                        else:
+
+                            Data.moves[startsquare].append(targetSquare)
 
             targetSquare = startsquare + Data.directionalOffsets[pieceDirection] * (i + 1)
             pieceOnTargetSquare = Data.boardArray[targetSquare]
@@ -305,6 +337,20 @@ def generatePawnMoves(startsquare,piece):
     else:
 
         for i in range(-1, 2):
+
+            numSquaresX = -1
+
+            if i == -1:
+
+                numSquaresX = Data.MoveData.numSquaresToEdge[startsquare][2]
+
+            elif i == 1:
+
+                numSquaresX = Data.MoveData.numSquaresToEdge[startsquare][3]
+
+            if numSquaresX == 0:
+
+                continue
 
             targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + i
             pieceOnTargetSquare = Data.boardArray[targetSquare]
@@ -404,13 +450,17 @@ def generateKnightMoves(startsquare, piece):
 
             for i in range(-1, 2, 2):
 
-                if direction > 1:
+                numSquaresX = -1
 
-                    offset = 8 * i
+                if direction < 2:
 
-                else:
+                    numSquaresX = Data.MoveData.numSquaresToEdge[startsquare][2] if i == -1 else Data.MoveData.numSquaresToEdge[startsquare][3]
 
-                    offset = 1 * i
+                if numSquaresX == 0:
+
+                    continue
+
+                offset = 8 * i if direction > 1 else 1 * i
                     
                 targetSquare = startsquare + (Data.directionalOffsets[direction] * 2) + offset
 
@@ -418,22 +468,9 @@ def generateKnightMoves(startsquare, piece):
 
                     continue
 
-                else:
-
-                    for xDirection in range(2, 4):
-
-                        print(Data.MoveData.numSquaresToEdge[startsquare][xDirection])
-
-                        if Data.MoveData.numSquaresToEdge[startsquare][xDirection] == 0:
-
-                            continue
-
-
                 pieceOnTargetSquare = Data.boardArray[targetSquare]
 
                 if not isOurTurn(piece):
-
-                    # if isFriendly(piece, pieceOnTargetSquare) or pieceOnTargetSquare == 0:
 
                     Data.pinnedSquares.append(targetSquare)
 
@@ -452,6 +489,8 @@ def generateKnightMoves(startsquare, piece):
                     else:
 
                         Data.moves[startsquare].append(targetSquare)
+
+
 
 
 

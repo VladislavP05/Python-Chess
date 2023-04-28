@@ -7,6 +7,10 @@ pygame.init()
 
 testClock = pygame.time.Clock()
 
+programFont = pygame.font.Font(None, 65)
+
+programFontBackground = pygame.font.Font(None, 67)
+
 pygame.display.set_caption('Chess by Vladislav Petkov')
 
 screen = pygame.display.set_mode((1400,1000))
@@ -19,9 +23,7 @@ pieceMoved = False
 Functions.updatePositionFromFen(Data.codeFen)
 Functions.generateMoves()
 
-
-#Fix sliding piece pinned squares
-
+#---Fix Knight Movement
 
 while True:
     
@@ -68,8 +70,6 @@ while True:
                     currentPieceAddress = Functions.getTextureAddress(Data.boardArray[Data.originalSquareIndex])                
 
                     Data.boardArray[Data.originalSquareIndex] = 0
-
-                print(f'rank - {rank} file - {file} index - {Data.originalSquareIndex}')
 
         elif event.type == pygame.MOUSEBUTTONUP:
 
@@ -152,8 +152,10 @@ while True:
 
         pieceMoved = False
 
+    Functions.drawStatusBox(263, 25, screen, programFont)
+
     pygame.display.flip()
 
-    screen.fill((25,25,25))
+    screen.fill(Data.BACKGROUNDCOLOR)
 
-# Test Version 1.4
+# Test Version 1.5

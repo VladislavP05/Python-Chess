@@ -1,4 +1,13 @@
 
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+BACKGROUNDCOLOR = (25, 25, 25)
+BOARDCOLWHITE = (160, 100, 57)
+BOARDCOLBLACK = (255, 230, 179)
+
+
+
 boardArray = [0 for i in range(64)]
 
 codeFen =  'rnbqkbnr/1ppppppp/8/p7/8/7N/PPPPPPPP/RNBQKB1R w KQkq - 0 1'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
