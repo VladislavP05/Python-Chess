@@ -10,7 +10,7 @@ BOARDCOLBLACK = (255, 230, 179)
 
 boardArray = [0 for i in range(64)]
 
-codeFen =  'rnbqkbnr/1ppppppp/8/p7/8/7N/PPPPPPPP/RNBQKB1R w KQkq - 0 1'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen =  'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
@@ -20,13 +20,32 @@ kingWhiteState = 0
 
 kingBlackState = 0
 
+#-------------------------#
+
 gameState = 0
 
-#----Mouse Objects----
+# 0 - Game in progress
+# 1 - White Wins
+# 2 - Black Wins
+# 3 - Draw
+
+#-------------------------#
+
+turnFull = 1
+
+turnHalf = 0
+
+totalPieces = 0
+
+totalPiecesLastTurn = 0
 
 originalSquareValue = -1
 
 originalSquareIndex = -1
+
+moveSquareIndex = -1
+
+enPassantSquares = []
 
 
 

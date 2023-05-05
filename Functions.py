@@ -68,6 +68,30 @@ def isOurTurn(piece):
     return False
 
 
+
+def calculatePiecesOnBoard():
+
+    pieces = [x for x in Data.boardArray if x != 0]
+
+    Data.totalPieces = len(pieces)
+
+
+
+def addEnPassant(pawnIndex):
+
+    if Data.isWhiteTurn:
+
+        Data.enPassantSquares.append(pawnIndex - 8)
+
+    else:
+
+        Data.enPassantSquares.append(pawnIndex + 8)
+
+    
+
+
+
+
 def drawStatusBox(x, y, Screen, Font):
 
     msgColor = (0)
@@ -102,6 +126,22 @@ def drawStatusBox(x, y, Screen, Font):
 
 
 
+def updateGameState():
+
+    if Data.kingWhiteState == 2 or Data.kingBlackState == 2:
+
+        Data.gameState = 1 if Data.kingBlackState == 2 else 2
+
+        return None
+
+    if Data.turnHalf == 100:
+
+        Data.gameState = 3
+
+        return None
+    
+
+
 def updateTurn():
 
     if Data.isWhiteTurn:
@@ -109,15 +149,32 @@ def updateTurn():
         Data.isWhiteTurn = False
         splitFen = Data.codeFen.split(' ')
         splitFen[1] = 'b'
-        Data.codeFen = ' '.join(splitFen)
 
     else:
 
         Data.isWhiteTurn = True
         splitFen = Data.codeFen.split(' ')
         splitFen[1] = 'w'
-        Data.codeFen = ' '.join(splitFen)
 
+        Data.turnFull += 1
+
+        splitFen[len(splitFen) - 1] = str(Data.turnFull)
+
+    if (Data.originalSquareValue == 10 or Data.originalSquareValue == 18) or Data.totalPiecesLastTurn > Data.totalPieces:
+        
+        Data.turnHalf = 0
+
+        splitFen[len(splitFen) - 2] = str(Data.turnHalf)
+
+    else:
+
+        Data.turnHalf += 1
+
+        splitFen[len(splitFen) - 2] = str(Data.turnHalf)
+
+    Data.codeFen = ' '.join(splitFen)
+
+    Data.totalPieces = 0
 
 
 def updatePositionFromFen(fen):
@@ -131,8 +188,12 @@ def updatePositionFromFen(fen):
             rank -= 1
         else:
             if symbol.isdigit():
+
                 file += int(symbol)
+
             else:
+
+                Data.totalPieces += 1
                 pieceColor = Data.Piece.White if symbol.isupper() else Data.Piece.Black
                 pieceType = Data.PieceTable.typeSymbolTable[symbol.lower()]
                 Data.boardArray[rank * 8 + file] = pieceType + pieceColor
@@ -209,6 +270,7 @@ def drawBoard(xCord, yCord, Screen):
                 square.blit(pieceTexture,(0,0))
 
             squareIndex += 1
+
             board.blit(square,(file * 100, rank * 100))
             
 
@@ -363,7 +425,7 @@ def generatePawnMoves(startsquare,piece):
 
                 Data.pinnedSquares.append(targetSquare)
 
-            elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 and pieceOnTargetSquare == 0:
+            elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 or targetSquare in Data.enPassantSquares and pieceOnTargetSquare == 0:
 
                 if startsquare not in Data.moves:
 
@@ -437,7 +499,7 @@ def generateKingMoves():
                     Data.moves.pop(square)
 
 
-
+            
 def generateKnightMoves(startsquare, piece):
 
     offset = 0
@@ -549,3 +611,11 @@ def generateSlidingMoves(startsquare, piece):
                 if not isFriendly(piece, pieceOnTargetSquare) and pieceOnTargetSquare != 0:
 
                     break
+
+
+def initializeGame():
+
+    updatePositionFromFen(Data.codeFen)
+
+    generateMoves()
+    

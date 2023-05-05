@@ -9,21 +9,21 @@ testClock = pygame.time.Clock()
 
 programFont = pygame.font.Font(None, 65)
 
-programFontBackground = pygame.font.Font(None, 67)
-
 pygame.display.set_caption('Chess by Vladislav Petkov')
 
 screen = pygame.display.set_mode((1400,1000))
 
 mouseDraging = False
+
 mouseSurf = pygame.Surface((100,100))
+
 currentPieceAddress = ''
+
 pieceMoved = False
 
-Functions.updatePositionFromFen(Data.codeFen)
-Functions.generateMoves()
+Functions.initializeGame()
 
-#---Fix Knight Movement
+#---Add Full and Half Turn Timers
 
 while True:
     
@@ -87,6 +87,8 @@ while True:
 
                     Data.boardArray[squareIndex] = Data.originalSquareValue
 
+                    Data.moveSquareIndex = squareIndex
+
                     currentPieceAddress = ''
 
                     mouseDraging = False
@@ -96,6 +98,8 @@ while True:
                 elif squareIndex != Data.originalSquareIndex and (Data.boardArray[squareIndex] < 16 or Data.boardArray[squareIndex] == 0) and squareIndex in Data.moves[Data.originalSquareIndex] and not Data.isWhiteTurn:
 
                     Data.boardArray[squareIndex] = Data.originalSquareValue
+
+                    Data.moveSquareIndex = squareIndex
 
                     currentPieceAddress = ''
 
@@ -128,7 +132,15 @@ while True:
 
     if pieceMoved:
 
+        if (Data.originalSquareValue == 10 or Data.originalSquareValue == 18) and (Data.originalSquareIndex in range(8, 16) or Data.originalSquareIndex in range(48, 56)) and (Data.moveSquareIndex in range(24, 32) or Data.moveSquareIndex in range(32, 40)):
+
+            Functions.addEnPassant(Data.moveSquareIndex)
+
+        print(Data.enPassantSquares)
+
         Functions.updateFenFromPosition(Data.boardArray)
+
+        Functions.calculatePiecesOnBoard()
 
         Functions.updateTurn()
 
@@ -147,6 +159,10 @@ while True:
         print (Data.codeFen)
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
+
+        Data.lastPieceMoved = Data.originalSquareValue
+
+        Data.totalPiecesLastTurn = Data.totalPieces
 
         Data.originalSquareIndex = -1
 
