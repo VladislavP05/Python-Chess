@@ -96,8 +96,6 @@ def drawStatusBox(x, y, Screen, Font):
 
     msgColor = (0)
 
-    msgBackground = (0)
-
     msgText = ''
 
     if Data.isWhiteTurn or Data.kingBlackState == 2:
@@ -251,9 +249,13 @@ def drawBoard(xCord, yCord, Screen):
 
             squareColor = pygame.Rect(0,0,100,100)
 
-            if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.originalSquareValue):
+            if (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.originalSquareValue) and (file + rank) % 2 == 0:
 
-                pygame.draw.rect(square,(200, 50, 50), squareColor)
+                pygame.draw.rect(square, Data.BOARDPIECETARGETCOLLIGHT, squareColor)
+
+            elif (Data.originalSquareIndex in Data.moves) and (squareIndex in Data.moves[Data.originalSquareIndex]) and isOurTurn(Data.originalSquareValue) and (file + rank) % 2 != 0:
+
+                pygame.draw.rect(square, Data.BOARDPIECETARGETCOLDARK, squareColor)
 
             elif (file + rank) % 2 == 0:
 
@@ -266,7 +268,7 @@ def drawBoard(xCord, yCord, Screen):
             if Data.boardArray[squareIndex] > 0:
             
                 pieceTexture = pygame.image.load(getTextureAddress(Data.boardArray[squareIndex]))
-
+ 
                 square.blit(pieceTexture,(0,0))
 
             squareIndex += 1
