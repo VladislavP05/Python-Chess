@@ -47,7 +47,9 @@ originalSquareIndex = -1
 
 moveSquareIndex = -1
 
-enPassantSquares = []
+enPassantSquare = -1
+
+movedPieces = []
 
 
 

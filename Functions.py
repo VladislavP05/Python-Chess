@@ -77,17 +77,216 @@ def calculatePiecesOnBoard():
 
 
 
-def addEnPassant(pawnIndex):
+def enPassantHandler(pawnIndex, mode: str):
+        
+    fileTable = {
 
-    if Data.isWhiteTurn:
+        0 : 'a',
+        1 : 'b',
+        2 : 'c',
+        3 : 'd',
+        4 : 'e',
+        5 : 'f',
+        6 : 'g',
+        7 : 'h'
 
-        Data.enPassantSquares.append(pawnIndex - 8)
+    }
+
+    rank = ((pawnIndex - 8) // 8) + 1 if Data.isWhiteTurn else ((pawnIndex + 8) // 8) + 1
+
+    file = pawnIndex % 8
+
+    splitFen = Data.codeFen.split(' ')
+
+
+
+    def addEnPassant():
+
+        splitFen[3] = fileTable[file] + str(rank)
+
+        if Data.isWhiteTurn:
+
+            Data.enPassantSquare = (pawnIndex - 8)
+
+        else:
+
+            Data.enPassantSquare = (pawnIndex + 8)
+
+    
+
+    def removeEnPassant():
+
+        splitFen[3] = '-'
+
+        Data.enPassantSquare = -1
+
+
+
+    if mode == 'add':
+
+        addEnPassant()
+
+    elif mode == 'remove':
+
+        removeEnPassant()
 
     else:
 
-        Data.enPassantSquares.append(pawnIndex + 8)
-
+        raise AttributeError('Mode not Found')
     
+    Data.codeFen = ' '.join(splitFen)
+
+
+
+def castlingHandler(mode: str, squareIndex = -1):
+
+    def castlingCalculation():
+
+        squaresToSearch = [[0, 1, 2, 3, 4], [4, 5, 6, 7], [56, 57, 58, 59, 60], [60, 61, 62, 63]]
+
+        squares = []
+
+        squareRequirements = [[13, 0, 0, 0, 9], [9, 0, 0, 13], [21, 0, 0, 0, 17], [17, 0, 0, 21]]
+
+        for i, searchSquares in enumerate(squaresToSearch):
+
+            for square in searchSquares:
+
+                if square in Data.movedPieces:
+
+                    break 
+
+                squares.append(Data.boardArray[square])
+
+            if squares == squareRequirements[i]:
+
+                if i == 0 or i == 2:
+
+                    if 4 in Data.moves or 60 in Data.moves:
+
+                        if Data.isWhiteTurn and i == 0:
+
+                            Data.moves[4].append(2)
+
+                        elif not Data.isWhiteTurn and i == 2:
+
+                            Data.moves[60].append(58)
+
+                    else:
+
+                        if Data.isWhiteTurn and i == 0:
+
+                            Data.moves[4] = [2]
+
+                        elif not Data.isWhiteTurn and i == 2:
+
+                            Data.moves[60] = [58]
+
+                elif i == 1 or i == 3:
+
+                    if 4 in Data.moves or 60 in Data.moves:
+
+                        if Data.isWhiteTurn and i == 1:
+
+                            Data.moves[4].append(6)
+
+                        elif not Data.isWhiteTurn and i == 3:
+
+                            Data.moves[60].append(62)
+
+                    else:
+
+                        if Data.isWhiteTurn and i == 1:
+
+                            Data.moves[4] = [6]
+
+                        elif not Data.isWhiteTurn and i == 3:
+
+                            Data.moves[60] = [62]
+
+            squares = []
+
+    def castleFenHandler():
+
+        splitFen = Data.codeFen.split(' ')
+                
+        if squareIndex == 0 and 'K' in splitFen[2]:
+
+            castlingLetters = [*splitFen[2]]
+
+            castlingLetters.remove('K')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        elif squareIndex == 7 and 'Q' in splitFen[2]:
+
+            castlingLetters = [*splitFen[2]]
+
+            castlingLetters.remove('Q')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        elif squareIndex == 56 and 'k' in splitFen[2]:
+
+            castlingLetters = [*splitFen[2]]
+
+            castlingLetters.remove('k')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        elif squareIndex == 63 and 'q' in splitFen[2]:
+
+            castlingLetters = [*splitFen[2]]
+
+            castlingLetters.remove('q')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        elif squareIndex == 4 and ('K' in splitFen[2] or 'Q' in splitFen[2]):
+
+            castlingLetters = [*splitFen[2]]
+
+            if 'K' in castlingLetters:
+
+                castlingLetters.remove('K')
+
+            if 'Q' in castlingLetters:
+
+                castlingLetters.remove('Q')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        elif squareIndex == 60 and ('k' in splitFen[2] or 'q' in splitFen[2]):
+
+            castlingLetters = [*splitFen[2]]
+
+            if 'k' in castlingLetters:
+
+                castlingLetters.remove('k')
+
+            if 'q' in castlingLetters:
+
+                castlingLetters.remove('q')
+
+            splitFen[2] = ''.join(castlingLetters)
+
+        if len(splitFen[2]) == 0:
+
+            splitFen[2] = '-'
+
+        Data.codeFen = ' '.join(splitFen)
+
+    if mode == 'add':
+
+        castlingCalculation()
+
+    elif mode == 'remove':
+
+        castleFenHandler()
+
+    else:
+
+        raise AttributeError('Mode not Found')
 
 
 
@@ -142,16 +341,16 @@ def updateGameState():
 
 def updateTurn():
 
+    splitFen = Data.codeFen.split(' ')
+
     if Data.isWhiteTurn:
         
         Data.isWhiteTurn = False
-        splitFen = Data.codeFen.split(' ')
         splitFen[1] = 'b'
 
     else:
 
         Data.isWhiteTurn = True
-        splitFen = Data.codeFen.split(' ')
         splitFen[1] = 'w'
 
         Data.turnFull += 1
@@ -427,7 +626,7 @@ def generatePawnMoves(startsquare,piece):
 
                 Data.pinnedSquares.append(targetSquare)
 
-            elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 or targetSquare in Data.enPassantSquares and pieceOnTargetSquare == 0:
+            elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 or targetSquare == Data.enPassantSquare and pieceOnTargetSquare == 0:
 
                 if startsquare not in Data.moves:
 

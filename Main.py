@@ -23,7 +23,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#---Add Full and Half Turn Timers
+#--- Fix Castling
 
 while True:
     
@@ -134,9 +134,57 @@ while True:
 
         if (Data.originalSquareValue == 10 or Data.originalSquareValue == 18) and (Data.originalSquareIndex in range(8, 16) or Data.originalSquareIndex in range(48, 56)) and (Data.moveSquareIndex in range(24, 32) or Data.moveSquareIndex in range(32, 40)):
 
-            Functions.addEnPassant(Data.moveSquareIndex)
+            Functions.enPassantHandler(Data.moveSquareIndex, 'add')
 
-        print(Data.enPassantSquares)
+        elif (Data.originalSquareValue == 10 or Data.originalSquareValue == 18) and Data.moveSquareIndex == Data.enPassantSquare:
+
+            if Data.isWhiteTurn:
+
+                Data.boardArray[Data.enPassantSquare - 8] = 0
+
+            else:
+
+                Data.boardArray[Data.enPassantSquare + 8] = 0
+
+            Functions.enPassantHandler(Data.moveSquareIndex, 'remove')
+
+        elif (Data.originalSquareValue == 10 or Data.originalSquareValue == 18) and (Data.originalSquareIndex in range(24, 32) or Data.originalSquareIndex in range(32, 40)) and (Data.moveSquareIndex in range(32, 40) or Data.moveSquareIndex in range(24, 32)) or Functions.isOurTurn(Data.originalSquareValue):
+
+            Functions.enPassantHandler(Data.moveSquareIndex, 'remove')
+
+        if (Data.kingWhiteState == 0 and Data.isWhiteTurn) or (Data.kingBlackState == 0 and not Data.isWhiteTurn):
+
+            Functions.castlingHandler('add')
+
+        if (Data.originalSquareIndex == 4 or Data.originalSquareIndex == 60) or (Data.originalSquareIndex == 0 or Data.originalSquareIndex == 7) or (Data.originalSquareIndex == 56 or Data.originalSquareIndex == 63):
+
+            Functions.castlingHandler('remove', Data.originalSquareIndex)
+
+        if Data.originalSquareIndex == 4 and Data.moveSquareIndex == 2 and Data.originalSquareIndex not in Data.movedPieces:
+
+            Data.boardArray[3] = 13
+
+            Data.boardArray[0] = 0
+
+        elif Data.originalSquareIndex == 4 and Data.moveSquareIndex == 6 and Data.originalSquareIndex not in Data.movedPieces:
+
+            Data.boardArray[5] = 13
+
+            Data.boardArray[7] = 0
+
+        elif Data.originalSquareIndex == 60 and Data.moveSquareIndex == 58 and Data.originalSquareIndex not in Data.movedPieces:
+
+            Data.boardArray[59] = 21
+
+            Data.boardArray[56] = 0
+
+        elif Data.originalSquareIndex == 60 and Data.moveSquareIndex == 62 and Data.originalSquareIndex not in Data.movedPieces:
+
+            Data.boardArray[61] = 21
+
+            Data.boardArray[63] = 0
+    
+        print(Data.enPassantSquare)
 
         Functions.updateFenFromPosition(Data.boardArray)
 
@@ -159,6 +207,10 @@ while True:
         print (Data.codeFen)
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
+
+        if Data.originalSquareIndex not in Data.movedPieces:
+
+            Data.movedPieces.append(Data.originalSquareIndex)
 
         Data.lastPieceMoved = Data.originalSquareValue
 
