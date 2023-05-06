@@ -12,15 +12,15 @@ The code depends on the pygame module. If you have it installed then run the Mai
 
 - Piece move logic and captures
 
-- (WIP) King checkmates
+- King checkmates
+
+- (WIP)Advanced piece moves
 
 ## To be Implemented
 
-- Advanced piece moves
-
 - Pawn promotion
 
-- Half-turns and stalemates
+- Stalemates
 
 - Timer and info text
 
