@@ -23,7 +23,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#--- Fix Castling
+#--- 
 
 while True:
     
@@ -152,10 +152,6 @@ while True:
 
             Functions.enPassantHandler(Data.moveSquareIndex, 'remove')
 
-        if (Data.kingWhiteState == 0 and Data.isWhiteTurn) or (Data.kingBlackState == 0 and not Data.isWhiteTurn):
-
-            Functions.castlingHandler('add')
-
         if (Data.originalSquareIndex == 4 or Data.originalSquareIndex == 60) or (Data.originalSquareIndex == 0 or Data.originalSquareIndex == 7) or (Data.originalSquareIndex == 56 or Data.originalSquareIndex == 63):
 
             Functions.castlingHandler('remove', Data.originalSquareIndex)
@@ -184,6 +180,7 @@ while True:
 
             Data.boardArray[63] = 0
     
+
         print(Data.enPassantSquare)
 
         Functions.updateFenFromPosition(Data.boardArray)
@@ -197,6 +194,10 @@ while True:
         Data.moves = {}
 
         Data.pinnedSquares = []
+
+        if (Data.kingWhiteState == 0 and Data.isWhiteTurn) or (Data.kingBlackState == 0 and not Data.isWhiteTurn):
+
+            Functions.castlingHandler('add')
 
         Functions.generateMoves()
 
@@ -212,6 +213,7 @@ while True:
 
             Data.movedPieces.append(Data.originalSquareIndex)
 
+
         Data.lastPieceMoved = Data.originalSquareValue
 
         Data.totalPiecesLastTurn = Data.totalPieces
@@ -226,4 +228,4 @@ while True:
 
     screen.fill(Data.BACKGROUNDCOLOR)
 
-# Test Version 1.5
+# Test Version 1.6

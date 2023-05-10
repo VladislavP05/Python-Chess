@@ -142,65 +142,69 @@ def castlingHandler(mode: str, squareIndex = -1):
 
     def castlingCalculation():
 
+        startIndex = 0 if Data.isWhiteTurn else 2
+
+        endIndex = 2 if Data.isWhiteTurn else 4
+
         squaresToSearch = [[0, 1, 2, 3, 4], [4, 5, 6, 7], [56, 57, 58, 59, 60], [60, 61, 62, 63]]
 
         squares = []
 
         squareRequirements = [[13, 0, 0, 0, 9], [9, 0, 0, 13], [21, 0, 0, 0, 17], [17, 0, 0, 21]]
 
-        for i, searchSquares in enumerate(squaresToSearch):
+        for searchSquares in range(startIndex, endIndex):
 
-            for square in searchSquares:
+            for square in squaresToSearch[searchSquares]:
 
-                if square in Data.movedPieces:
+                if square in Data.movedPieces and ((Data.boardArray[square] == 9 or Data.boardArray[square] == 17) or (Data.boardArray[square] == 13 or Data.boardArray[square] == 21)):
 
                     break 
 
                 squares.append(Data.boardArray[square])
 
-            if squares == squareRequirements[i]:
+            if squares == squareRequirements[searchSquares]:
 
-                if i == 0 or i == 2:
+                if searchSquares == 0 or searchSquares == 2:
 
                     if 4 in Data.moves or 60 in Data.moves:
 
-                        if Data.isWhiteTurn and i == 0:
+                        if Data.isWhiteTurn and searchSquares == 0:
 
                             Data.moves[4].append(2)
 
-                        elif not Data.isWhiteTurn and i == 2:
+                        elif not Data.isWhiteTurn and searchSquares == 2:
 
                             Data.moves[60].append(58)
 
                     else:
 
-                        if Data.isWhiteTurn and i == 0:
+                        if  Data.isWhiteTurn and searchSquares == 0:
 
                             Data.moves[4] = [2]
 
-                        elif not Data.isWhiteTurn and i == 2:
+                        elif not Data.isWhiteTurn and searchSquares == 2:
 
                             Data.moves[60] = [58]
 
-                elif i == 1 or i == 3:
+                elif searchSquares == 1 or searchSquares == 3:
 
                     if 4 in Data.moves or 60 in Data.moves:
 
-                        if Data.isWhiteTurn and i == 1:
+                        if Data.isWhiteTurn and searchSquares == 1:
 
                             Data.moves[4].append(6)
 
-                        elif not Data.isWhiteTurn and i == 3:
+                        elif not Data.isWhiteTurn and searchSquares == 3:
 
                             Data.moves[60].append(62)
 
                     else:
 
-                        if Data.isWhiteTurn and i == 1:
+                        if Data.isWhiteTurn and searchSquares == 1:
 
                             Data.moves[4] = [6]
 
-                        elif not Data.isWhiteTurn and i == 3:
+                        elif not Data.isWhiteTurn and searchSquares == 3:
 
                             Data.moves[60] = [62]
 
