@@ -23,7 +23,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#--- 
+#--- Add Pawn Promotion
 
 while True:
     
