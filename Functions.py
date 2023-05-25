@@ -1,5 +1,6 @@
 import pygame
 import Data
+from math import ceil
 
 
 
@@ -132,7 +133,7 @@ def enPassantHandler(pawnIndex, mode: str):
 
     else:
 
-        raise AttributeError('Mode not Found')
+        raise Exception('Mode not Found')
     
     Data.codeFen = ' '.join(splitFen)
 
@@ -290,7 +291,42 @@ def castlingHandler(mode: str, squareIndex = -1):
 
     else:
 
-        raise AttributeError('Mode not Found')
+        raise Exception('Mode not Found')
+
+
+
+def pawnPromotionHandler(square, mouseX, mouseY, screen):
+
+    def drawSelectionScreen():
+
+        screenX = (ceil(((mouseX - 50) // 100) + 1)) * 100
+
+        screenY = 100 if square in range(56, 64) else 900
+
+        direction = -1 if square in range(56, 64) else 1
+
+        screenSurf = pygame.Surface((80, 80))
+
+        for square in range(0, 4, direction):
+
+            pieceOrder = ((11, 12, 13, 14), (19, 20, 21, 22))
+
+            textureAddress = getTextureAddress(pieceOrder[not Data.isWhiteTurn][square])
+
+            imageSurf = pygame.image.load(textureAddress)
+
+            imageSurf = pygame.transform.scale(imageSurf, 80)
+
+            screenSurf.blit(imageSurf, (0,0))
+
+            
+
+        pass
+
+    def pawnPromotion():
+
+        pass
+
 
 
 
