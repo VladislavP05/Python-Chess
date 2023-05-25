@@ -213,7 +213,6 @@ while True:
 
             Data.movedPieces.append(Data.originalSquareIndex)
 
-
         Data.lastPieceMoved = Data.originalSquareValue
 
         Data.totalPiecesLastTurn = Data.totalPieces

@@ -485,6 +485,8 @@ def drawBoard(xCord, yCord, Screen):
 
 def generateMoves():
 
+    
+
     for startSquare in range(64):
 
         piece = Data.boardArray[startSquare]
@@ -560,6 +562,20 @@ def generatePawnMoves(startsquare,piece):
             if i == 0:
 
                 for j in range(-1, 2, 2):
+
+                    numSquaresX = -1
+
+                    if i == -1:
+
+                        numSquaresX = Data.MoveData.numSquaresToEdge[startsquare][2]
+
+                    elif i == 1:
+
+                        numSquaresX = Data.MoveData.numSquaresToEdge[startsquare][3]
+
+                    if numSquaresX == 0:
+
+                        continue
 
                     targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + j
                     pieceOnTargetSquare = Data.boardArray[targetSquare]
