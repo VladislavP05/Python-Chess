@@ -1,6 +1,6 @@
 import pygame
 import Data
-from math import ceil
+from sys import exit
 
 
 
@@ -295,39 +295,69 @@ def castlingHandler(mode: str, squareIndex = -1):
 
 
 
-def pawnPromotionHandler(square, mouseX, mouseY, screen):
+def pawnPromotionHandler(square, screen):
 
-    def drawSelectionScreen():
+    selectionTable = {
 
-        screenX = (ceil(((mouseX - 50) // 100) + 1)) * 100
+        0 : (11,19),
+        1 : (12,20),
+        2 : (13,21),
+        3 : (14,22)
 
-        screenY = 100 if square in range(56, 64) else 900
+    }
 
-        direction = -1 if square in range(56, 64) else 1
+    squareCord = square * 100 if square < 50 else (square - 56) * 100
 
-        screenSurf = pygame.Surface((80, 80))
+    screenX = squareCord + 150
 
-        for square in range(0, 4, direction):
+    screenY = 100 if square in range(56, 64) else 900
+
+    screenSurf = pygame.Surface((80, 80))
+
+    while True:
+
+        mouseInputX, mouseInputY = -1, -1
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+
+                pygame.quit()
+
+                exit()
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+
+                mouseInputX, mouseInputY = pygame.mouse.get_pos()
+
+
+
+        for selectionSquare in range(0, 4):
 
             pieceOrder = ((11, 12, 13, 14), (19, 20, 21, 22))
 
-            textureAddress = getTextureAddress(pieceOrder[not Data.isWhiteTurn][square])
+            textureAddress = getTextureAddress(pieceOrder[Data.isWhiteTurn][selectionSquare])
 
             imageSurf = pygame.image.load(textureAddress)
 
-            imageSurf = pygame.transform.scale(imageSurf, 80)
+            imageSurf = pygame.transform.scale(imageSurf, (80,80))
+
+            screenSurf.fill(Data.WHITE)
 
             screenSurf.blit(imageSurf, (0,0))
 
-            
-
-        pass
-
-    def pawnPromotion():
-
-        pass
+            screen.blit(screenSurf, (screenX, screenY + (selectionSquare * 80) if not Data.isWhiteTurn else screenY - 80 - (selectionSquare * 80)))
 
 
+        if mouseInputX in range(screenX, screenX + 80) and mouseInputY in range(screenY, screenY + 320 if not Data.isWhiteTurn else screenY - 320, 1 if not Data.isWhiteTurn else -1):
+
+            mouseSelection = (mouseInputY // 80) - 1 if not Data.isWhiteTurn else ((mouseInputY // 80) - 10) * -1
+
+            Data.boardArray[square] = selectionTable[mouseSelection][0] if not Data.isWhiteTurn else selectionTable[mouseSelection][1]
+
+            break
+
+        pygame.display.flip()
 
 
 
@@ -585,11 +615,11 @@ def checkForChecks():
 
 
 
-def generatePawnMoves(startsquare,piece):
+def generatePawnMoves(startsquare, piece):
 
     pieceDirection = 1 if piece > 16 else 0
 
-    numSquares = Data.MoveData.numSquaresToEdge[startsquare][0]
+    numSquares = Data.MoveData.numSquaresToEdge[startsquare][0] if piece == 10 else Data.MoveData.numSquaresToEdge[startsquare][1]
 
     if (7 < startsquare < 16 and piece < 16) or (47 < startsquare < 56 and piece > 16):
 
@@ -658,6 +688,14 @@ def generatePawnMoves(startsquare,piece):
         for i in range(-1, 2):
 
             numSquaresX = -1
+
+            if numSquares == 0:
+
+                if not isOurTurn(piece):
+
+                    Data.pawnPromotion, Data.pawnPromotionSquare = True, startsquare
+
+                break
 
             if i == -1:
 

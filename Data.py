@@ -12,11 +12,11 @@ BOARDPIECETARGETCOLLIGHT = (255, 75, 75)
 
 boardArray = [0 for i in range(64)]
 
-codeFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen = 'rnbqkb2/1ppppp1P/5n2/8/3P4/2N5/PpP1PP2/R1BQKBNR w KQk - 0 3'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
-isWhiteTurn = True
+isWhiteTurn = False
 
 kingWhiteState = 0
 
@@ -32,6 +32,14 @@ gameState = 0
 # 3 - Draw
 
 #-------------------------#
+
+pawnPromotion = False
+pawnPromotionSquare = -1
+
+# Pawn Promotion Variables
+
+#-------------------------#
+
 
 turnFull = 1
 
@@ -50,6 +58,8 @@ moveSquareIndex = -1
 enPassantSquare = -1
 
 movedPieces = []
+
+
 
 
 

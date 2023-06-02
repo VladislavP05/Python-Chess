@@ -179,7 +179,7 @@ while True:
             Data.boardArray[61] = 21
 
             Data.boardArray[63] = 0
-    
+
 
         print(Data.enPassantSquare)
 
@@ -200,6 +200,12 @@ while True:
             Functions.castlingHandler('add')
 
         Functions.generateMoves()
+
+        if Data.pawnPromotion:
+
+            Functions.pawnPromotionHandler(Data.pawnPromotionSquare, screen)
+
+            Data.pawnPromotion, Data.pawnPromotionSquare = False, -1
 
         Functions.generateKingMoves()
 
@@ -227,4 +233,4 @@ while True:
 
     screen.fill(Data.BACKGROUNDCOLOR)
 
-# Test Version 1.6
+# Test Version 0.7
