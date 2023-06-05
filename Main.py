@@ -23,7 +23,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#--- Add Pawn Promotion
+#--- Fix King Defense Behavior
 
 while True:
     
@@ -85,9 +85,11 @@ while True:
 
                 if squareIndex != Data.originalSquareIndex and (Data.boardArray[squareIndex] > 16 or Data.boardArray[squareIndex] == 0) and squareIndex in Data.moves[Data.originalSquareIndex] and Data.isWhiteTurn:
 
-                    Data.boardArray[squareIndex] = Data.originalSquareValue
-
                     Data.moveSquareIndex = squareIndex
+
+                    Data.pieceTaken = Data.boardArray[Data.moveSquareIndex]
+
+                    Data.boardArray[squareIndex] = Data.originalSquareValue
 
                     currentPieceAddress = ''
 
@@ -97,9 +99,11 @@ while True:
 
                 elif squareIndex != Data.originalSquareIndex and (Data.boardArray[squareIndex] < 16 or Data.boardArray[squareIndex] == 0) and squareIndex in Data.moves[Data.originalSquareIndex] and not Data.isWhiteTurn:
 
-                    Data.boardArray[squareIndex] = Data.originalSquareValue
-
                     Data.moveSquareIndex = squareIndex
+
+                    Data.pieceTaken = Data.boardArray[Data.moveSquareIndex]
+
+                    Data.boardArray[squareIndex] = Data.originalSquareValue
 
                     currentPieceAddress = ''
 
@@ -140,9 +144,13 @@ while True:
 
             if Data.isWhiteTurn:
 
+                Data.pieceTaken = Data.boardArray[Data.enPassantSquare - 8]
+
                 Data.boardArray[Data.enPassantSquare - 8] = 0
 
             else:
+
+                Data.pieceTaken = Data.boardArray[Data.enPassantSquare + 8]
 
                 Data.boardArray[Data.enPassantSquare + 8] = 0
 
@@ -180,12 +188,15 @@ while True:
 
             Data.boardArray[63] = 0
 
-
-        print(Data.enPassantSquare)
-
         Functions.updateFenFromPosition(Data.boardArray)
 
         Functions.calculatePiecesOnBoard()
+        
+        if Data.totalPieces < Data.totalPiecesLastTurn:
+
+            Functions.updatePoints()
+
+        Data.totalPiecesLastTurn = Data.totalPieces
 
         Functions.updateTurn()
 
@@ -221,13 +232,23 @@ while True:
 
         Data.lastPieceMoved = Data.originalSquareValue
 
-        Data.totalPiecesLastTurn = Data.totalPieces
+        Data.pieceTaken = 0
 
         Data.originalSquareIndex = -1
 
         pieceMoved = False
 
-    Functions.drawStatusBox(263, 25, screen, programFont)
+    Data.timeElapsed += 1
+
+    Functions.drawUI(screen)
+
+    # Functions.drawText(f'Time Elapsed:', 60, Data.WHITE, 1000, 100, screen)
+
+    # Functions.drawText(f'{strftime("%H:%M:%S", gmtime(Data.timeElapsed // 120))}', 55, Data.WHITE, 1060, 150, screen)
+
+    # Functions.drawText(f'White Points: {Data.whitePoints}', 50, Data.WHITE, 900, 300, screen)
+
+    # Functions.drawStatusBox(263, 25, screen, programFont)
 
     pygame.display.flip()
 

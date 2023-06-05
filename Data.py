@@ -12,11 +12,11 @@ BOARDPIECETARGETCOLLIGHT = (255, 75, 75)
 
 boardArray = [0 for i in range(64)]
 
-codeFen = 'rnbqkb2/1ppppp1P/5n2/8/3P4/2N5/PpP1PP2/R1BQKBNR w KQk - 0 3'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen = 'rnbqkbnr/ppppp2p/8/5Pp1/8/8/PPPP1PPP/RNBQKBNR w KQkq g6 0 2'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
-isWhiteTurn = False
+isWhiteTurn = True
 
 kingWhiteState = 0
 
@@ -47,7 +47,7 @@ turnHalf = 0
 
 totalPieces = 0
 
-totalPiecesLastTurn = 0
+totalPiecesLastTurn = 32
 
 originalSquareValue = -1
 
@@ -55,9 +55,38 @@ originalSquareIndex = -1
 
 moveSquareIndex = -1
 
-enPassantSquare = -1
+enPassantSquare = 46
 
 movedPieces = []
+
+pieceTaken = 0
+
+#-------------------------#
+
+piecePointValues = {
+
+    10 : 1,
+    11 : 3,
+    12 : 3,
+    13 : 5,
+    14 : 9,
+    18 : 1,
+    19 : 3,
+    20 : 3,
+    21 : 5,
+    22 : 9
+
+}
+
+timeElapsed = 0
+
+whitePoints = 0
+
+blackPoints = 0
+
+#Game Data
+
+#-------------------------#
 
 
 

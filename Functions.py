@@ -1,6 +1,17 @@
 import pygame
 import Data
 from sys import exit
+from time import strftime,gmtime
+
+
+
+def drawText(text, size, color, x, y, screen):
+
+    font = pygame.font.Font(None,size)
+
+    scrText = font.render(text, True, color)
+
+    screen.blit(scrText, (x,y))
 
 
 
@@ -312,7 +323,9 @@ def pawnPromotionHandler(square, screen):
 
     screenY = 100 if square in range(56, 64) else 900
 
-    screenSurf = pygame.Surface((80, 80))
+    screenSurf = pygame.Surface((81, 81))
+
+    backgroundSurf = pygame.Surface((75,75))
 
     while True:
 
@@ -330,7 +343,7 @@ def pawnPromotionHandler(square, screen):
 
                 mouseInputX, mouseInputY = pygame.mouse.get_pos()
 
-
+        drawBoard(50, 100, screen)
 
         for selectionSquare in range(0, 4):
 
@@ -342,7 +355,11 @@ def pawnPromotionHandler(square, screen):
 
             imageSurf = pygame.transform.scale(imageSurf, (80,80))
 
-            screenSurf.fill(Data.WHITE)
+            screenSurf.fill(Data.BLACK)
+
+            backgroundSurf.fill(Data.WHITE)
+
+            screenSurf.blit(backgroundSurf, (3,3))
 
             screenSurf.blit(imageSurf, (0,0))
 
@@ -357,11 +374,34 @@ def pawnPromotionHandler(square, screen):
 
             break
 
+
+        Data.timeElapsed += 1
+
+        drawUI(screen)
+
         pygame.display.flip()
 
+        screen.fill(Data.BACKGROUNDCOLOR)
 
 
-def drawStatusBox(x, y, Screen, Font):
+
+def drawUI(screen):
+
+    drawText(f'Time Elapsed:', 60, Data.WHITE, 1000, 100, screen)
+
+    drawText(f'{strftime("%H:%M:%S", gmtime(Data.timeElapsed // 120))}', 55, Data.WHITE, 1060, 150, screen)
+
+    drawText(f'White Points: {Data.whitePoints}', 50, Data.WHITE, 900, 300, screen)
+
+    drawText(f'Black Points: {Data.blackPoints}', 50, Data.WHITE, 900, 350, screen)
+
+    drawStatusBox(263, 25, screen)
+
+
+
+def drawStatusBox(x, y, Screen):
+
+    msgFont = pygame.font.Font(None, 65)
 
     msgColor = (0)
 
@@ -387,7 +427,7 @@ def drawStatusBox(x, y, Screen, Font):
 
         msgText = "Black Side's Turn"
 
-    textBox = Font.render(msgText, True, msgColor)
+    textBox = msgFont.render(msgText, True, msgColor)
 
     Screen.blit(textBox, (x, y))
 
@@ -442,6 +482,19 @@ def updateTurn():
     Data.codeFen = ' '.join(splitFen)
 
     Data.totalPieces = 0
+
+
+
+def updatePoints():
+
+    if Data.isWhiteTurn and Data.pieceTaken in Data.piecePointValues: 
+
+        Data.whitePoints += Data.piecePointValues[Data.pieceTaken]
+
+    elif Data.pieceTaken in Data.piecePointValues:
+
+        Data.blackPoints += Data.piecePointValues[Data.pieceTaken]
+
 
 
 def updatePositionFromFen(fen):
