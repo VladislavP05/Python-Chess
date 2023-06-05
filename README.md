@@ -14,11 +14,11 @@ The code depends on the pygame module. If you have it installed then run the Mai
 
 - King checkmates
 
-- (WIP)Advanced piece moves
+- Advanced piece moves
+
+- (WIP)Pawn promotion
 
 ## To be Implemented
-
-- Pawn promotion
 
 - Stalemates
 
