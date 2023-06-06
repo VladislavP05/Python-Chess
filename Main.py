@@ -3,6 +3,17 @@ import sys
 import Functions
 import Data
 
+#-------- Ram Debuging Modules --------#
+
+# import tracemalloc
+
+# import MemDebug
+
+# tracemalloc.start()
+
+
+
+
 pygame.init()
 
 testClock = pygame.time.Clock()
@@ -34,6 +45,10 @@ while True:
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
+
+            # snapshot = tracemalloc.take_snapshot()
+
+            # MemDebug.display_top(snapshot)
 
             pygame.quit()
 
@@ -222,6 +237,12 @@ while True:
 
         Functions.checkForChecks()
 
+        if Data.kingWhiteState == 1 or Data.kingBlackState == 1:
+
+            Functions.checkMoveHandler()
+
+        Functions.checkForChecks()
+
         print (Data.codeFen)
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
@@ -238,17 +259,7 @@ while True:
 
         pieceMoved = False
 
-    Data.timeElapsed += 1
-
     Functions.drawUI(screen)
-
-    # Functions.drawText(f'Time Elapsed:', 60, Data.WHITE, 1000, 100, screen)
-
-    # Functions.drawText(f'{strftime("%H:%M:%S", gmtime(Data.timeElapsed // 120))}', 55, Data.WHITE, 1060, 150, screen)
-
-    # Functions.drawText(f'White Points: {Data.whitePoints}', 50, Data.WHITE, 900, 300, screen)
-
-    # Functions.drawStatusBox(263, 25, screen, programFont)
 
     pygame.display.flip()
 

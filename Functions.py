@@ -7,6 +7,8 @@ from time import strftime,gmtime
 
 def drawText(text, size, color, x, y, screen):
 
+    #Memory Leak
+
     font = pygame.font.Font(None,size)
 
     scrText = font.render(text, True, color)
@@ -375,8 +377,6 @@ def pawnPromotionHandler(square, screen):
             break
 
 
-        Data.timeElapsed += 1
-
         drawUI(screen)
 
         pygame.display.flip()
@@ -389,17 +389,19 @@ def drawUI(screen):
 
     drawText(f'Time Elapsed:', 60, Data.WHITE, 1000, 100, screen)
 
-    drawText(f'{strftime("%H:%M:%S", gmtime(Data.timeElapsed // 120))}', 55, Data.WHITE, 1060, 150, screen)
+    drawText(f'{strftime("%H:%M:%S", gmtime(pygame.time.get_ticks() // 1000))}', 55, Data.WHITE, 1060, 150, screen)
 
     drawText(f'White Points: {Data.whitePoints}', 50, Data.WHITE, 900, 300, screen)
 
-    drawText(f'Black Points: {Data.blackPoints}', 50, Data.WHITE, 900, 350, screen)
+    drawText(f'Black Points: {Data.blackPoints}', 50, Data.WHITE, 904, 350, screen)
 
     drawStatusBox(263, 25, screen)
 
 
 
 def drawStatusBox(x, y, Screen):
+
+    #Memory Leak
 
     msgFont = pygame.font.Font(None, 65)
 
@@ -559,6 +561,8 @@ def updateFenFromPosition(array):
 
 def drawBoard(xCord, yCord, Screen):
 
+    #Memory Leak?
+
     board = pygame.Surface((800,800))
 
     squareIndex = 0
@@ -600,6 +604,30 @@ def drawBoard(xCord, yCord, Screen):
 
     Screen.blit(board, (xCord, yCord))
 
+
+
+def checkMoveHandler():
+
+    toBeRemoved = []
+
+    for square in Data.moves:
+        for move in Data.moves[square]:
+
+            if isKing(Data.boardArray[square]):
+
+                break
+
+            elif ((Data.boardArray[square] < 16 and Data.kingWhiteState == 1) or (Data.boardArray[square] > 16 and Data.kingBlackState == 1)) and move not in Data.kingCheckingSquares:#move not in Data.kingCheckingSquares and ((Data.kingWhiteState == 1 and isOurTurn(Data.boardArray[square])) or (Data.kingBlackState == 1 and isOurTurn(Data.boardArray[square]))):
+
+                toBeRemoved.append(move)
+
+        for move in toBeRemoved:
+
+            Data.moves[square].remove(move)
+
+        toBeRemoved = []
+                
+    Data.kingCheckingSquares = []
 
 
 def generateMoves():
@@ -644,7 +672,7 @@ def checkForChecks():
 
                 break
             
-            elif square in Data.pinnedSquares and square not in Data.moves:
+            elif len(Data.moves) == 0:
 
                 if piece == 9:
 
@@ -665,6 +693,8 @@ def checkForChecks():
                 else:
 
                     Data.kingBlackState = 0
+
+                    
 
 
 
@@ -909,6 +939,8 @@ def generateSlidingMoves(startsquare, piece):
     startDirIndex = 4 if piece == 12 or piece == 20 else 0
     endDirIndex = 4 if piece == 13 or piece == 21 else 8
 
+    squaresTraveled = 0
+
     for direction in range(startDirIndex,endDirIndex):
 
         numSquares = Data.MoveData.numSquaresToEdge[startsquare][direction]
@@ -921,6 +953,23 @@ def generateSlidingMoves(startsquare, piece):
             if not isOurTurn(piece):
 
                 if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare):
+
+                    offsetTable = {
+
+                        0 : -8,
+                        1 : 8,
+                        2 : 1,
+                        3 : -1,
+                        4 : -7,
+                        5 : 7,
+                        6 : -9,
+                        7 : 9
+
+                    }
+
+                    for dangerSquares in range(1, squaresTraveled):
+
+                        Data.kingCheckingSquares.append(targetSquare + (dangerSquares * offsetTable[direction]))
 
                     for remainingSquares in range(n, numSquares):
 
@@ -935,6 +984,8 @@ def generateSlidingMoves(startsquare, piece):
                     Data.pinnedSquares.append(targetSquare)
 
                 if pieceOnTargetSquare == 0:
+
+                    squaresTraveled += 1
 
                     Data.pinnedSquares.append(targetSquare)
 
