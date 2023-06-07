@@ -12,13 +12,13 @@ BOARDPIECETARGETCOLLIGHT = (255, 75, 75)
 
 boardArray = [0 for i in range(64)]
 
-codeFen = 'q6q/8/8/8/8/8/8/4K3 w KQkq - 0 1'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen = 'rkb4R/p7/p2N4/6p1/6Pp/P3K2P/1P6/R1B5 w - - 0 3'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
-isWhiteTurn = False
+isWhiteTurn = True
 
-kingWhiteState = 1
+kingWhiteState = 0
 
 kingBlackState = 0
 

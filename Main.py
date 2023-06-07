@@ -247,6 +247,8 @@ while True:
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
 
+        print(f'Game State - {Data.gameState}')
+
         if Data.originalSquareIndex not in Data.movedPieces:
 
             Data.movedPieces.append(Data.originalSquareIndex)

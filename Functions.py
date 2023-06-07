@@ -660,7 +660,7 @@ def checkForChecks():
          
         if isKing(piece) and isOurTurn(piece):
 
-            if square in Data.pinnedSquares and square in Data.moves:
+            if square in Data.pinnedSquares and len(Data.moves) > 0:
 
                 if piece == 9:
 
@@ -729,6 +729,14 @@ def generatePawnMoves(startsquare, piece):
                     targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + j
                     pieceOnTargetSquare = Data.boardArray[targetSquare]
 
+                    if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare):
+
+                        Data.pinnedSquares.append(targetSquare)
+
+                        Data.kingCheckingSquares.append(startsquare)
+
+                        break
+
                     if isFriendly(piece,pieceOnTargetSquare):
 
                         if not isOurTurn(piece):
@@ -794,6 +802,14 @@ def generatePawnMoves(startsquare, piece):
 
             targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + i
             pieceOnTargetSquare = Data.boardArray[targetSquare]
+
+            if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare):
+
+                Data.pinnedSquares.append(targetSquare)
+
+                Data.kingCheckingSquares.append(startsquare)
+
+                break
 
             if (i == 0 and pieceOnTargetSquare != 0) or numSquares == 0:
 
@@ -910,6 +926,14 @@ def generateKnightMoves(startsquare, piece):
 
                 pieceOnTargetSquare = Data.boardArray[targetSquare]
 
+                if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare):
+
+                    Data.pinnedSquares.append(targetSquare)
+
+                    Data.kingCheckingSquares.append(startsquare)
+
+                    break
+
                 if not isOurTurn(piece):
 
                     Data.pinnedSquares.append(targetSquare)
@@ -945,6 +969,8 @@ def generateSlidingMoves(startsquare, piece):
 
         numSquares = Data.MoveData.numSquaresToEdge[startsquare][direction]
 
+        squaresTraveled = 1
+
         for n in range(0, numSquares):
 
             targetSquare = startsquare + Data.directionalOffsets[direction] * (n + 1)
@@ -970,6 +996,12 @@ def generateSlidingMoves(startsquare, piece):
                     for dangerSquares in range(1, squaresTraveled):
 
                         Data.kingCheckingSquares.append(targetSquare + (dangerSquares * offsetTable[direction]))
+
+                    else:
+
+                        if squaresTraveled == 1:
+
+                            Data.kingCheckingSquares.append(targetSquare + squaresTraveled)
 
                     for remainingSquares in range(n, numSquares):
 
