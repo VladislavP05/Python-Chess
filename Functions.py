@@ -5,15 +5,23 @@ from time import strftime,gmtime
 
 
 
-def drawText(text, size, color, x, y, screen):
+def drawText(text, color, x, y, screen):
 
-    #Memory Leak
-
-    font = pygame.font.Font(None,size)
-
-    scrText = font.render(text, True, color)
+    scrText = Data.fontMedium.render(text, True, color)
 
     screen.blit(scrText, (x,y))
+
+
+
+def drawButton(x, y, color, text, screen, function, state = 'Normal'):
+
+    buttonColor = color if state == 'Normal' else (255, 255, 255)
+
+    buttonSurface = pygame.surface.Surface(150, 50)
+
+
+
+
 
 
 
@@ -387,13 +395,13 @@ def pawnPromotionHandler(square, screen):
 
 def drawUI(screen):
 
-    drawText(f'Time Elapsed:', 60, Data.WHITE, 1000, 100, screen)
+    drawText(f'Time Elapsed:', Data.WHITE, 1000, 100, screen)
 
-    drawText(f'{strftime("%H:%M:%S", gmtime(pygame.time.get_ticks() // 1000))}', 55, Data.WHITE, 1060, 150, screen)
+    drawText(f'{strftime("%H:%M:%S", gmtime(pygame.time.get_ticks() // 1000))}', Data.WHITE, 1060, 150, screen)
 
-    drawText(f'White Points: {Data.whitePoints}', 50, Data.WHITE, 900, 300, screen)
+    drawText(f'White Points: {Data.whitePoints}', Data.WHITE, 900, 300, screen)
 
-    drawText(f'Black Points: {Data.blackPoints}', 50, Data.WHITE, 904, 350, screen)
+    drawText(f'Black Points: {Data.blackPoints}', Data.WHITE, 904, 350, screen)
 
     drawStatusBox(263, 25, screen)
 
@@ -401,11 +409,8 @@ def drawUI(screen):
 
 def drawStatusBox(x, y, Screen):
 
-    #Memory Leak
 
-    msgFont = pygame.font.Font(None, 65)
-
-    msgColor = (0)
+    msgColor = Data.WHITE
 
     msgText = ''
 
@@ -413,13 +418,13 @@ def drawStatusBox(x, y, Screen):
 
         msgColor = Data.WHITE
 
-    elif not Data.isWhiteTurn or Data.kingWhiteState == 2:
-
-        msgColor = Data.BLACK
-
     if Data.kingBlackState == 2 or Data.kingWhiteState == 2:
 
         msgText = 'White Side Wins' if Data.kingBlackState == 2 else 'Black Side Wins'
+
+    elif Data.gameState == 3:
+
+        msgText = "           Draw"
 
     elif Data.isWhiteTurn:
 
@@ -429,7 +434,8 @@ def drawStatusBox(x, y, Screen):
 
         msgText = "Black Side's Turn"
 
-    textBox = msgFont.render(msgText, True, msgColor)
+
+    textBox = Data.fontLarge.render(msgText, True, msgColor)
 
     Screen.blit(textBox, (x, y))
 
@@ -441,14 +447,11 @@ def updateGameState():
 
         Data.gameState = 1 if Data.kingBlackState == 2 else 2
 
-        return None
 
     if Data.turnHalf == 100:
 
         Data.gameState = 3
 
-        return None
-    
 
 
 def updateTurn():
@@ -608,7 +611,9 @@ def drawBoard(xCord, yCord, Screen):
 
 def checkMoveHandler():
 
-    toBeRemoved = []
+    movesToBeRemoved = []
+
+    squaresToBeRemoved = []
 
     for square in Data.moves:
         for move in Data.moves[square]:
@@ -619,14 +624,22 @@ def checkMoveHandler():
 
             elif ((Data.boardArray[square] < 16 and Data.kingWhiteState == 1) or (Data.boardArray[square] > 16 and Data.kingBlackState == 1)) and move not in Data.kingCheckingSquares:#move not in Data.kingCheckingSquares and ((Data.kingWhiteState == 1 and isOurTurn(Data.boardArray[square])) or (Data.kingBlackState == 1 and isOurTurn(Data.boardArray[square]))):
 
-                toBeRemoved.append(move)
+                movesToBeRemoved.append(move)
 
-        for move in toBeRemoved:
+        for move in movesToBeRemoved:
 
             Data.moves[square].remove(move)
 
-        toBeRemoved = []
+        if len(Data.moves[square]) == 0:
+
+            squaresToBeRemoved.append(square)
+
+        movesToBeRemoved = []
                 
+    for square in squaresToBeRemoved:
+
+        Data.moves.pop(square)
+
     Data.kingCheckingSquares = []
 
 
@@ -766,6 +779,10 @@ def generatePawnMoves(startsquare, piece):
 
                 break
 
+            if pieceOnTargetSquare != 0 or not isOurTurn(piece):
+
+                continue
+
             if startsquare not in Data.moves:
 
                 Data.moves[startsquare] = [targetSquare]
@@ -811,13 +828,13 @@ def generatePawnMoves(startsquare, piece):
 
                 break
 
-            if (i == 0 and pieceOnTargetSquare != 0) or numSquares == 0:
-
-                continue
-
-            if i != 0 and (pieceOnTargetSquare == 0 or isFriendly(piece, pieceOnTargetSquare)) and not isOurTurn(piece):
+            if i != 0 and not isOurTurn(piece):#(pieceOnTargetSquare == 0 or isFriendly(piece, pieceOnTargetSquare)) and not isOurTurn(piece):
 
                 Data.pinnedSquares.append(targetSquare)
+
+            if (i == 0 and pieceOnTargetSquare != 0) or not isOurTurn(piece):
+
+                continue
 
             elif i != 0 and (pieceOnTargetSquare != 0 and not isFriendly(piece, pieceOnTargetSquare)) or i == 0 or targetSquare == Data.enPassantSquare and pieceOnTargetSquare == 0:
 
@@ -1042,6 +1059,28 @@ def generateSlidingMoves(startsquare, piece):
                 if not isFriendly(piece, pieceOnTargetSquare) and pieceOnTargetSquare != 0:
 
                     break
+
+
+
+def enterEndGameState():
+
+    while True:
+
+        for event in pygame.event.get():
+
+            if event == pygame.QUIT:
+
+                pygame.quit()
+
+                exit()
+
+            elif event == pygame.MOUSEBUTTONDOWN:
+
+                mouseX, mouseY = pygame.mouse.get_pos()
+
+            
+        
+            
 
 
 def initializeGame():

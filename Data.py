@@ -1,4 +1,11 @@
+from pygame import font
 
+
+font.init()
+
+fontLarge = font.Font(None, 65)
+fontMedium = font.Font(None, 55)
+fontSmall = font.Font(None, 45)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -12,7 +19,7 @@ BOARDPIECETARGETCOLLIGHT = (255, 75, 75)
 
 boardArray = [0 for i in range(64)]
 
-codeFen = 'rkb4R/p7/p2N4/6p1/6Pp/P3K2P/1P6/R1B5 w - - 0 3'#'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+codeFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 directionalOffsets = [8, -8, -1, 1, 7, -7, 9, -9]
 
@@ -43,7 +50,7 @@ pawnPromotionSquare = -1
 
 turnFull = 1
 
-turnHalf = 0
+turnHalf = 99
 
 totalPieces = 0
 
@@ -89,7 +96,7 @@ blackPoints = 0
 
 #-------------------------#
 
-
+font
 
 
 

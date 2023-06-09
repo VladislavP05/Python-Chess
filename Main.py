@@ -243,6 +243,8 @@ while True:
 
         Functions.checkForChecks()
 
+        Functions.updateGameState()
+
         print (Data.codeFen)
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
