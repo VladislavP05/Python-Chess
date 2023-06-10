@@ -1,7 +1,7 @@
 import pygame
 import Data
 from sys import exit
-from time import strftime,gmtime
+from time import strftime,gmtime,ctime
 
 
 
@@ -13,11 +13,19 @@ def drawText(text, color, x, y, screen):
 
 
 
-def drawButton(x, y, color, text, screen, function, state = 'Normal'):
+def drawButton(x, y, color, text, screen, state = 'Normal'):
 
     buttonColor = color if state == 'Normal' else (255, 255, 255)
 
-    buttonSurface = pygame.surface.Surface(150, 50)
+    buttonSurface = pygame.surface.Surface((250, 75))
+
+    buttonSurface.fill(buttonColor)
+
+    textSurface = Data.fontSmall.render(text, True, Data.WHITE)
+
+    buttonSurface.blit(textSurface, (39,22))
+
+    screen.blit(buttonSurface, (x,y))
 
 
 
@@ -397,7 +405,7 @@ def drawUI(screen):
 
     drawText(f'Time Elapsed:', Data.WHITE, 1000, 100, screen)
 
-    drawText(f'{strftime("%H:%M:%S", gmtime(pygame.time.get_ticks() // 1000))}', Data.WHITE, 1060, 150, screen)
+    drawText(f'{strftime("%H:%M:%S", gmtime(Data.timePlayed))}', Data.WHITE, 1060, 150, screen)
 
     drawText(f'White Points: {Data.whitePoints}', Data.WHITE, 900, 300, screen)
 
@@ -1062,9 +1070,27 @@ def generateSlidingMoves(startsquare, piece):
 
 
 
-def enterEndGameState():
+def saveGameData():
+
+    with open('Save Game', 'w') as file:
+
+        file.write(f'\nGame Date: {ctime()}\nGame Duration: {strftime("%H:%M:%S", gmtime(Data.timePlayed))}\n\nMoves:\n\n')
+
+        for move, fenCode in enumerate(Data.moveFenCodes):
+
+            file.write(f'{move + 1}: {fenCode}\n\n')
+
+
+
+def enterEndGameState(screen):
 
     while True:
+
+        mouseX, mouseY = 0, 0
+
+        drawBoard(50, 100, screen)
+
+        drawUI(screen)
 
         for event in pygame.event.get():
 
@@ -1074,16 +1100,96 @@ def enterEndGameState():
 
                 exit()
 
-            elif event == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
 
                 mouseX, mouseY = pygame.mouse.get_pos()
 
-            
-        
-            
+        if (1000 < mouseX < 1250) and (700 < mouseY < 775):
+
+            saveGameData()
+
+            drawButton(1000, 700, (50, 50, 255), 'Save Game', screen, 'Pressed')
+
+        else:
+
+            drawButton(1000, 700, (50, 50, 255), 'Save Game', screen)
+
+        if (1000 < mouseX < 1250) and (800 < mouseY < 875):
+
+            resetGame()
+
+            drawButton(1000, 800, (50, 255, 50), '     Reset', screen, 'Pressed')
+
+            break
+
+        else:
+
+            drawButton(1000, 800, (50, 220, 50), '     Reset', screen)
+
+
+        pygame.display.flip()
+
+        screen.fill(Data.BACKGROUNDCOLOR)
+
 
 
 def initializeGame():
+
+    updatePositionFromFen(Data.codeFen)
+
+    generateMoves()
+    
+
+
+def resetGame():
+
+    Data.boardArray = [0 for i in range(64)]
+
+    Data.codeFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+    Data.isWhiteTurn = True
+
+    Data.kingWhiteState = 0
+
+    Data.kingBlackState = 0  
+
+    Data.gameState = 0
+
+    Data.turnFull = 1
+
+    Data.turnHalf = 0
+
+    Data.totalPieces = 0
+
+    Data.totalPiecesLastTurn = 32
+
+    Data.originalSquareValue = -1
+
+    Data.originalSquareIndex = -1
+
+    Data.moveSquareIndex = -1
+
+    Data.enPassantSquare = -1
+
+    Data.movedPieces = []
+
+    Data.pieceTaken = 0
+
+    Data.kingCheckingSquares = []
+
+    Data.whitePoints = 0
+
+    Data.blackPoints = 0
+
+    Data.moves = {}
+
+    Data.pinnedSquares = []
+
+    # Data.startTimer = 0
+
+    # Data.endTimer = 0
+
+    Data.timePlayed = 0
 
     updatePositionFromFen(Data.codeFen)
 

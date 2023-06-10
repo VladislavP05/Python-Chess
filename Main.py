@@ -2,6 +2,7 @@ import pygame
 import sys
 import Functions
 import Data
+from time import time
 
 #-------- Ram Debuging Modules --------#
 
@@ -37,6 +38,8 @@ Functions.initializeGame()
 #--- Fix King Defense Behavior
 
 while True:
+
+    Data.startTimer = time()
     
     testClock.tick(120)
 
@@ -245,6 +248,12 @@ while True:
 
         Functions.updateGameState()
 
+        Data.moveFenCodes.append(Data.codeFen)
+
+        if Data.gameState != 0:
+
+            Functions.enterEndGameState(screen)
+
         print (Data.codeFen)
 
         print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
@@ -263,10 +272,14 @@ while True:
 
         pieceMoved = False
 
+    Data.endTimer = time()
+
+    Data.timePlayed += Data.endTimer - Data.startTimer
+
     Functions.drawUI(screen)
 
     pygame.display.flip()
 
     screen.fill(Data.BACKGROUNDCOLOR)
 
-# Test Version 0.7
+# Test Version 0.8

@@ -50,7 +50,7 @@ pawnPromotionSquare = -1
 
 turnFull = 1
 
-turnHalf = 99
+turnHalf = 0
 
 totalPieces = 0
 
@@ -62,7 +62,7 @@ originalSquareIndex = -1
 
 moveSquareIndex = -1
 
-enPassantSquare = 46
+enPassantSquare = -1
 
 movedPieces = []
 
@@ -92,11 +92,17 @@ whitePoints = 0
 
 blackPoints = 0
 
+startTimer = 0
+
+endTimer = 0
+
+timePlayed = 0
+
+moveFenCodes = [codeFen]
+
 #Game Data
 
 #-------------------------#
-
-font
 
 
 
