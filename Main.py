@@ -35,7 +35,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#--- Fix King Defense Behavior
+#--- Optimization
 
 while True:
 
@@ -71,17 +71,7 @@ while True:
 
                 Data.originalSquareValue = Data.boardArray[Data.originalSquareIndex]
 
-                #--Needs Rework--
-
-                if 0 < Data.boardArray[Data.originalSquareIndex] < 16 and Data.isWhiteTurn:
-
-                    mouseDraging = True
-
-                    currentPieceAddress = Functions.getTextureAddress(Data.boardArray[Data.originalSquareIndex])                
-
-                    Data.boardArray[Data.originalSquareIndex] = 0
-
-                elif Data.boardArray[Data.originalSquareIndex] > 16 and not Data.isWhiteTurn:
+                if Data.boardArray[Data.originalSquareIndex] > 0:
 
                     mouseDraging = True
 
@@ -99,37 +89,7 @@ while True:
 
                 squareIndex = rank * 8 + file
 
-                #---Needs rework---
-
-                if squareIndex != Data.originalSquareIndex and (Data.boardArray[squareIndex] > 16 or Data.boardArray[squareIndex] == 0) and squareIndex in Data.moves[Data.originalSquareIndex] and Data.isWhiteTurn:
-
-                    Data.moveSquareIndex = squareIndex
-
-                    Data.pieceTaken = Data.boardArray[Data.moveSquareIndex]
-
-                    Data.boardArray[squareIndex] = Data.originalSquareValue
-
-                    currentPieceAddress = ''
-
-                    mouseDraging = False
-
-                    pieceMoved = True
-
-                elif squareIndex != Data.originalSquareIndex and (Data.boardArray[squareIndex] < 16 or Data.boardArray[squareIndex] == 0) and squareIndex in Data.moves[Data.originalSquareIndex] and not Data.isWhiteTurn:
-
-                    Data.moveSquareIndex = squareIndex
-
-                    Data.pieceTaken = Data.boardArray[Data.moveSquareIndex]
-
-                    Data.boardArray[squareIndex] = Data.originalSquareValue
-
-                    currentPieceAddress = ''
-
-                    mouseDraging = False
-
-                    pieceMoved = True
-
-                else:
+                if Data.originalSquareIndex not in Data.moves or squareIndex not in Data.moves[Data.originalSquareIndex]:
 
                     Data.boardArray[Data.originalSquareIndex] = Data.originalSquareValue
 
@@ -140,6 +100,20 @@ while True:
                     pieceMoved = False
 
                     Data.originalSquareIndex = -1
+
+                elif squareIndex != Data.originalSquareIndex and squareIndex in Data.moves[Data.originalSquareIndex]:
+
+                    Data.moveSquareIndex = squareIndex
+
+                    Data.pieceTaken = Data.boardArray[Data.moveSquareIndex]
+
+                    Data.boardArray[squareIndex] = Data.originalSquareValue
+
+                    currentPieceAddress = ''
+
+                    mouseDraging = False
+
+                    pieceMoved = True
 
     if event.type == pygame.MOUSEMOTION or currentPieceAddress != '':
         

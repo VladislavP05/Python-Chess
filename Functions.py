@@ -1,7 +1,7 @@
 import pygame
 import Data
 from sys import exit
-from time import strftime,gmtime,ctime
+from time import strftime,gmtime,ctime,time
 
 
 
@@ -26,10 +26,6 @@ def drawButton(x, y, color, text, screen, state = 'Normal'):
     buttonSurface.blit(textSurface, (39,22))
 
     screen.blit(buttonSurface, (x,y))
-
-
-
-
 
 
 
@@ -1185,9 +1181,9 @@ def resetGame():
 
     Data.pinnedSquares = []
 
-    # Data.startTimer = 0
+    Data.startTimer = time()
 
-    # Data.endTimer = 0
+    Data.endTimer = 0
 
     Data.timePlayed = 0
 
