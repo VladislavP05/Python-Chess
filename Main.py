@@ -14,7 +14,6 @@ from time import time
 
 
 
-
 pygame.init()
 
 testClock = pygame.time.Clock()
@@ -56,9 +55,9 @@ while True:
             pygame.quit()
 
             sys.exit()
-    
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            
+
             mouseX,mouseY = pygame.mouse.get_pos()
 
             if (50 < mouseX < 850) and (100 < mouseY < 900) and mouseDraging == False:
@@ -71,7 +70,7 @@ while True:
 
                 Data.originalSquareValue = Data.boardArray[Data.originalSquareIndex]
 
-                if Data.boardArray[Data.originalSquareIndex] > 0:
+                if Data.boardArray[Data.originalSquareIndex] > 0 and Functions.isOurTurn(Data.boardArray[Data.originalSquareIndex]):
 
                     mouseDraging = True
 
@@ -183,7 +182,7 @@ while True:
         Functions.updateFenFromPosition(Data.boardArray)
 
         Functions.calculatePiecesOnBoard()
-        
+
         if Data.totalPieces < Data.totalPiecesLastTurn:
 
             Functions.updatePoints()

@@ -5,27 +5,6 @@ from time import strftime,gmtime,ctime,time
 
 
 
-def drawText(text, color, x, y, screen):
-
-    scrText = Data.fontMedium.render(text, True, color)
-
-    screen.blit(scrText, (x,y))
-
-
-
-def drawButton(x, y, color, text, screen, state = 'Normal'):
-
-    buttonColor = color if state == 'Normal' else (255, 255, 255)
-
-    buttonSurface = pygame.surface.Surface((250, 75))
-
-    buttonSurface.fill(buttonColor)
-
-    textSurface = Data.fontSmall.render(text, True, Data.WHITE)
-
-    buttonSurface.blit(textSurface, (39,22))
-
-    screen.blit(buttonSurface, (x,y))
 
 
 
@@ -397,6 +376,30 @@ def pawnPromotionHandler(square, screen):
 
 
 
+def drawText(text, color, x, y, screen):
+
+    scrText = Data.fontMedium.render(text, True, color)
+
+    screen.blit(scrText, (x,y))
+
+
+
+def drawButton(x, y, color, text, screen, state = 'Normal'):
+
+    buttonColor = color if state == 'Normal' else (255, 255, 255)
+
+    buttonSurface = pygame.surface.Surface((250, 75))
+
+    buttonSurface.fill(buttonColor)
+
+    textSurface = Data.fontSmall.render(text, True, Data.WHITE)
+
+    buttonSurface.blit(textSurface, (39,22))
+
+    screen.blit(buttonSurface, (x,y))
+
+
+
 def drawUI(screen):
 
     drawText(f'Time Elapsed:', Data.WHITE, 1000, 100, screen)
@@ -412,7 +415,6 @@ def drawUI(screen):
 
 
 def drawStatusBox(x, y, Screen):
-
 
     msgColor = Data.WHITE
 
@@ -649,8 +651,6 @@ def checkMoveHandler():
 
 def generateMoves():
 
-    
-
     for startSquare in range(64):
 
         piece = Data.boardArray[startSquare]
@@ -824,7 +824,7 @@ def generatePawnMoves(startsquare, piece):
             targetSquare = startsquare + Data.directionalOffsets[pieceDirection] + i
             pieceOnTargetSquare = Data.boardArray[targetSquare]
 
-            if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare):
+            if isKing(pieceOnTargetSquare) and not isFriendly(piece, pieceOnTargetSquare) and i != 0:
 
                 Data.pinnedSquares.append(targetSquare)
 
@@ -832,7 +832,7 @@ def generatePawnMoves(startsquare, piece):
 
                 break
 
-            if i != 0 and not isOurTurn(piece):#(pieceOnTargetSquare == 0 or isFriendly(piece, pieceOnTargetSquare)) and not isOurTurn(piece):
+            if i != 0 and not isOurTurn(piece):
 
                 Data.pinnedSquares.append(targetSquare)
 
@@ -1188,6 +1188,8 @@ def resetGame():
     Data.timePlayed = 0
 
     updatePositionFromFen(Data.codeFen)
+
+    Data.moveFenCodes = [Data.codeFen]
 
     generateMoves()
     
