@@ -1,4 +1,4 @@
-# (WIP) Python Chess
+# Python Chess
 
 A chess game made using the pygame module in python.
 
@@ -16,15 +16,11 @@ The code depends on the pygame module. If you have it installed then run the Mai
 
 - Advanced piece moves
 
-- (WIP)Pawn promotion
-
-## To be Implemented
+- Pawn promotion
 
 - Stalemates
 
-- Timer and info text
-
-- Code optimisation
+- Timer and Info text
 
 # About
 This is my first major project in programming. It is inspired by the youtuber Sebastian Lague in his video ['Coding Adventures: Chess'](https://www.youtube.com/watch?v=U4ogK0MIzqk&t=257s).
