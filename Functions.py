@@ -19,58 +19,37 @@ def getTextureAddress(value):
 
 def isSlidingPiece(piece):
 
-    if 11 < piece < 15 or 19 < piece < 23:
-
-        return True
-        
-    return False
+    return True if 11 < piece < 15 or 19 < piece < 23 else False
     
 
 
 def isKnight(piece):
 
-    if piece == 11 or piece == 19:
+    return True if piece == 11 or piece == 19 else False
 
-        return True
-    
-    return False
+
 
 def isKing(piece):
 
-    if piece == 9 or piece == 17:
+    return True if piece == 9 or piece == 17 else False
 
-        return True
-    
-    return False
+
 
 def isPawn(piece):
 
-    if piece == 10 or piece == 18:
+    return True if piece == 10 or piece == 18 else False
 
-        return True
-    
-    return False
+
 
 def isFriendly(piece, targetPiece):
 
-    if 0 < piece < 16 and 0 < targetPiece < 16:
+    return True if (0 < piece < 16 and 0 < targetPiece < 16) or (16 < piece < 32 and 16 < targetPiece < 32) else False
 
-        return True
-    
-    elif 16 < piece < 32 and 16 < targetPiece < 32:
-
-        return True
-
-    return False
 
 
 def isOurTurn(piece):
 
-    if (piece < 16 and Data.isWhiteTurn) or (piece > 16 and not Data.isWhiteTurn):
-
-        return True
-
-    return False
+    return True if (piece < 16 and Data.isWhiteTurn) or (piece > 16 and not Data.isWhiteTurn) else False
 
 
 
@@ -83,19 +62,6 @@ def calculatePiecesOnBoard():
 
 
 def enPassantHandler(pawnIndex, mode: str):
-        
-    fileTable = {
-
-        0 : 'a',
-        1 : 'b',
-        2 : 'c',
-        3 : 'd',
-        4 : 'e',
-        5 : 'f',
-        6 : 'g',
-        7 : 'h'
-
-    }
 
     rank = ((pawnIndex - 8) // 8) + 1 if Data.isWhiteTurn else ((pawnIndex + 8) // 8) + 1
 
@@ -107,15 +73,9 @@ def enPassantHandler(pawnIndex, mode: str):
 
     def addEnPassant():
 
-        splitFen[3] = fileTable[file] + str(rank)
+        splitFen[3] = chr(file + 65) + str(rank)
 
-        if Data.isWhiteTurn:
-
-            Data.enPassantSquare = (pawnIndex - 8)
-
-        else:
-
-            Data.enPassantSquare = (pawnIndex + 8)
+        Data.enPassantSquare = (pawnIndex - 8) if Data.isWhiteTurn else (pawnIndex + 8)
 
     
 
@@ -569,8 +529,6 @@ def updateFenFromPosition(array):
 
 
 def drawBoard(xCord, yCord, Screen):
-
-    #Memory Leak?
 
     board = pygame.Surface((800,800))
 
@@ -1068,7 +1026,7 @@ def generateSlidingMoves(startsquare, piece):
 
 def saveGameData():
 
-    with open('Save Game', 'w') as file:
+    with open('save_game.txt', 'w') as file:
 
         file.write(f'\nGame Date: {ctime()}\nGame Duration: {strftime("%H:%M:%S", gmtime(Data.timePlayed))}\n\nMoves:\n\n')
 

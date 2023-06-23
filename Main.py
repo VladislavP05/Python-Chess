@@ -4,14 +4,6 @@ import Functions
 import Data
 from time import time
 
-#-------- Ram Debuging Modules --------#
-
-# import tracemalloc
-
-# import MemDebug
-
-# tracemalloc.start()
-
 
 
 pygame.init()
@@ -34,7 +26,7 @@ pieceMoved = False
 
 Functions.initializeGame()
 
-#--- Optimization
+
 
 while True:
 
@@ -47,10 +39,6 @@ while True:
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-
-            # snapshot = tracemalloc.take_snapshot()
-
-            # MemDebug.display_top(snapshot)
 
             pygame.quit()
 
@@ -123,7 +111,6 @@ while True:
             pieceTexture = pygame.image.load(currentPieceAddress)
 
             screen.blit(pieceTexture,(mouseX - 50, mouseY - 50))
-
 
     if pieceMoved:
 
@@ -227,17 +214,13 @@ while True:
 
             Functions.enterEndGameState(screen)
 
-        print (Data.codeFen)
-
-        print(f'{Data.kingWhiteState} - White King\n{Data.kingBlackState} - Black King')
-
-        print(f'Game State - {Data.gameState}')
-
         if Data.originalSquareIndex not in Data.movedPieces:
 
             Data.movedPieces.append(Data.originalSquareIndex)
 
         Data.lastPieceMoved = Data.originalSquareValue
+
+        print(f"Fen: {Data.codeFen}")
 
         Data.pieceTaken = 0
 
@@ -255,4 +238,4 @@ while True:
 
     screen.fill(Data.BACKGROUNDCOLOR)
 
-# Test Version 0.8
+# Test Version 1.0
